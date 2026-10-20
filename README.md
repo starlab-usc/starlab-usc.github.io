@@ -33,3 +33,16 @@ npm run preview
 
 The production site is generated in `dist/`. No backend or environment
 variables are required.
+
+## GitHub Pages
+
+The deployment target is https://starlab-usc.github.io/.
+In the GitHub repository's **Settings → Pages**, the publishing source must
+be **GitHub Actions**.
+GitHub Pages must be enabled before deployment. Private organization
+repositories require a GitHub plan that supports Pages for private repositories.
+
+Pushes to `main` run `.github/workflows/deploy.yml`, which checks and builds
+the site with Node.js 24.21.0, then deploys `dist/` to GitHub Pages. The workflow
+can also be run manually from the Actions tab. No deployment token or committed
+build output is needed.
