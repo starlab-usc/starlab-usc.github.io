@@ -1,0 +1,101 @@
+---
+import SiteLayout from '../layouts/SiteLayout.astro';
+import { Image } from 'astro:assets';
+import thumbnail from '../../assets/publications/2025_cdc_latent_representation/thumbnail.png';
+import publication from '../../assets/publications/2025_cdc_latent_representation/index.json';
+import bibtex from '../../assets/publications/2025_cdc_latent_representation/citation.bib?raw';
+import arxivIcon from '../../assets/arxiv.svg?url';
+import pdfIcon from '../../assets/pdf.svg?url';
+
+const resourceIcons: Record<string, string> = { arXiv: arxivIcon, PDF: pdfIcon };
+---
+
+<SiteLayout title="Publications">
+  <section aria-labelledby="publication-year">
+    <h2 id="publication-year">{publication.year}</h2>
+    <article aria-labelledby="publication-title">
+      <Image
+        class="publication-thumbnail"
+        src={thumbnail}
+        alt="Stability in latent space, above safety in latent space: diagrams relating latent certificates to guarantees in the original state space."
+        widths={[132, 264]}
+        sizes="132px"
+        format="webp"
+      />
+      <div class="publication-info">
+      <h3 id="publication-title">{publication.title}</h3>
+      <p>{publication.authors.join(', ')}</p>
+      <div class="venue-line">
+        <span class="venue">{publication.venue}, {publication.year}</span>
+        {publication.links.map((link) => (
+          <>
+            <span class="separator" aria-hidden="true"> | </span>
+            <a class="resource-link" href={link.url} aria-label={link.label} title={link.label}>
+              {resourceIcons[link.label] ? (
+                <img src={resourceIcons[link.label]} alt="" width="20" height="20" />
+              ) : link.label}
+            </a>
+          </>
+        ))}
+        <span class="separator" aria-hidden="true"> | </span>
+        <details>
+          <summary>BibTeX</summary>
+          <pre><code>{bibtex}</code></pre>
+        </details>
+      </div>
+      </div>
+    </article>
+  </section>
+</SiteLayout>
+
+<style>
+  section { max-width: 960px; }
+  h2 { margin: 32px 0 16px; font-size: 24px; }
+  article {
+    display: grid;
+    grid-template-columns: 132px minmax(0, 1fr);
+    gap: 24px;
+    align-items: start;
+    padding: 24px 0;
+    border-radius: 4px;
+  }
+  article:focus-within {
+    background: #f0eeea;
+    box-shadow: 0 0 0 10px #f0eeea, 0 0 0 11px #dcd8d0;
+  }
+  @media (hover: hover) {
+    article:hover {
+      background: #f0eeea;
+      box-shadow: 0 0 0 10px #f0eeea, 0 0 0 11px #dcd8d0;
+    }
+  }
+  .publication-thumbnail { display: block; width: 132px; max-width: 100%; height: auto; }
+  @media (max-width: 640px) {
+    article { grid-template-columns: minmax(0, 1fr); }
+  }
+  h3 { margin: 0 0 12px; font-size: 22px; line-height: 1.4; }
+  .venue-line { margin-top: 4px; line-height: 1.8; }
+  .venue, .separator { color: #626262; }
+  .separator { margin: 0 6px; }
+  a { color: inherit; text-underline-offset: 3px; }
+  .resource-link, summary {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    min-height: 24px;
+    vertical-align: middle;
+    border-radius: 4px;
+  }
+  .resource-link:hover, summary:hover { background: #f0eee9; }
+  details { display: inline; }
+  summary { cursor: pointer; width: fit-content; }
+  summary::-webkit-details-marker { display: none; }
+  pre {
+    padding: 16px;
+    background: #f0eee9;
+    white-space: pre-wrap;
+    overflow-wrap: anywhere;
+    font-size: 14px;
+    line-height: 1.6;
+  }
+</style>

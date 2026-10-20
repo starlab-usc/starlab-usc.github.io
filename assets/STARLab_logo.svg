@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<svg
+   width="64.663pt"
+   height="78.836pt"
+   viewBox="0 0 64.663 78.836"
+   version="1.1"
+   id="svg5"
+   xmlns="http://www.w3.org/2000/svg"
+   xmlns:svg="http://www.w3.org/2000/svg">
+  <defs
+     id="defs5" />
+  <path
+     fill-rule="nonzero"
+     fill="rgb(0%, 0%, 0%)"
+     fill-opacity="1"
+     d="M 3.984375 18.15625 L 3.984375 3.984375 L 46.503906 3.984375 L 46.503906 18.15625 Z M 3.984375 18.15625 "
+     id="path1" />
+  <path
+     fill-rule="nonzero"
+     fill="rgb(0%, 0%, 0%)"
+     fill-opacity="1"
+     d="M 3.984375 32.332031 L 3.984375 18.15625 L 18.160156 18.15625 L 18.160156 32.332031 Z M 3.984375 32.332031 "
+     id="path2" />
+  <path
+     fill-rule="nonzero"
+     fill="rgb(0%, 0%, 0%)"
+     fill-opacity="1"
+     d="M 18.160156 46.503906 L 18.160156 32.332031 L 32.332031 32.332031 L 32.332031 46.503906 Z M 18.160156 46.503906 "
+     id="path3" />
+  <path
+     fill-rule="nonzero"
+     fill="rgb(0%, 0%, 0%)"
+     fill-opacity="1"
+     d="M 46.503906 60.675781 L 46.503906 32.332031 L 60.679688 32.332031 L 60.679688 60.675781 Z M 46.503906 60.675781 "
+     id="path4" />
+  <path
+     fill-rule="nonzero"
+     fill="rgb(0%, 0%, 0%)"
+     fill-opacity="1"
+     d="M 18.160156 74.851562 L 18.160156 60.675781 L 60.679688 60.675781 L 60.679688 74.851562 Z M 18.160156 74.851562 "
+     id="path5" />
+</svg>

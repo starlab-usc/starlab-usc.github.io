@@ -1,0 +1,146 @@
+---
+import InteractiveLogo from '../components/InteractiveLogo';
+import logoUrl from '../../assets/STARLab_logo.svg?url';
+
+interface Props {
+  title?: string;
+}
+
+const { title } = Astro.props;
+const currentPath = Astro.url.pathname.replace(/\/$/, '') || '/';
+const navigation = [
+  { href: '/', label: 'About' },
+  { href: '/publications', label: 'Publications' },
+  { href: '/people', label: 'People' },
+];
+---
+
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta name="description" content="StarLab" />
+    <link rel="icon" type="image/svg+xml" href={logoUrl} />
+    <title>{title ? `${title} | StarLab` : 'StarLab'}</title>
+  </head>
+  <body>
+    <header class="banner" aria-label="StarLab">
+      <InteractiveLogo client:load>
+        <div class="lab-name">
+          <div class="site-title"><a href="/" aria-label="StarLab home">StarLab</a></div>
+          <p>
+            <span>[S]tatistical</span>
+            <span>[T]echniques</span>
+            <span>for</span>
+            <span class="reasoning-line">[A]utonomous [R]easoning</span>
+          </p>
+        </div>
+      </InteractiveLogo>
+      <nav aria-label="Main navigation">
+        {navigation.map(({ href, label }) => (
+          <a href={href} aria-current={currentPath === href ? 'page' : undefined}>{label}</a>
+        ))}
+      </nav>
+    </header>
+    <main>
+      {title && <h1>{title}</h1>}
+      <slot />
+    </main>
+  </body>
+</html>
+
+<style is:global>
+  * { box-sizing: border-box; }
+  html, body { margin: 0; min-height: 100%; }
+  body {
+    background: #faf9f6;
+    font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+    color: #252525;
+  }
+  .banner {
+    display: flex;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: 0;
+    min-height: 128px;
+    padding: 12px clamp(16px, 4vw, 64px);
+    background: #fff;
+    border-bottom: 1px solid #e9e7e2;
+  }
+  .brand {
+    display: flex;
+    align-items: center;
+    gap: 0;
+  }
+  .lab-name {
+    min-width: 0;
+    width: max-content;
+    font-size: clamp(40px, 4vw, 48px);
+  }
+  .lab-name .site-title {
+    margin: 0;
+    font-size: 1em;
+    font-weight: 650;
+    line-height: 1.05;
+    letter-spacing: -0.025em;
+  }
+  .lab-name p {
+    /* Let the title alone determine the shared width. */
+    contain: inline-size;
+    display: grid;
+    grid-template-columns: repeat(3, max-content);
+    justify-content: space-between;
+    margin: 4px 0 0;
+    font-size: 0.23em;
+    line-height: 1.4;
+    color: #626262;
+    white-space: nowrap;
+  }
+  .lab-name .reasoning-line {
+    grid-column: 1 / 3;
+    /* Follow the first two words without changing their column widths. */
+    contain: inline-size;
+    text-align-last: justify;
+  }
+  .site-title a { color: inherit; text-decoration: none; }
+  nav {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 24px;
+    margin-left: auto;
+    padding: 16px 0 16px 24px;
+  }
+  nav a {
+    color: inherit;
+    text-decoration: none;
+    font-weight: 500;
+    padding: 8px 0;
+  }
+  nav a:hover, nav a[aria-current="page"] {
+    text-decoration: underline;
+    text-underline-offset: 6px;
+  }
+  a:focus-visible { outline: 2px solid currentColor; outline-offset: 6px; }
+  main { padding: 40px clamp(16px, 4vw, 64px); }
+  main h1 { margin: 0 0 16px; font-size: clamp(32px, 5vw, 48px); }
+  main p { margin: 0; color: #626262; line-height: 1.6; }
+  @media (max-width: 540px) {
+    nav { width: 100%; margin-left: 0; padding-left: 0; }
+  }
+  .logo {
+    position: relative;
+    width: 104px;
+    height: 104px;
+    flex-shrink: 0;
+  }
+  .logo__fallback {
+    position: absolute;
+    inset: 0;
+    margin: auto;
+    width: auto;
+    height: 80px;
+  }
+  .logo__scene { position: absolute; inset: 0; }
+  .logo[data-ready="true"] .logo__fallback { visibility: hidden; }
+</style>

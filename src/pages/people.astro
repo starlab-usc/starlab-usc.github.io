@@ -1,0 +1,372 @@
+---
+import SiteLayout from '../layouts/SiteLayout.astro';
+import people from '../../assets/people_info.json';
+import placeholder from '../../assets/profile-placeholder.png?url';
+import scholarIcon from '../../assets/google-scholar.svg?url';
+import githubIcon from '../../assets/github.svg?url';
+
+const photos = import.meta.glob<string>('../../assets/*.{png,jpg,jpeg,webp}', {
+  eager: true,
+  query: '?url',
+  import: 'default',
+});
+const members = people.members.map((member, index) => {
+  const photo = member.profile_photo ? photos[`../../${member.profile_photo}`] : placeholder;
+  if (!photo) throw new Error(`Missing profile photo: ${member.profile_photo}`);
+  return { ...member, photo, index };
+});
+const sections = [
+  {
+    id: 'current',
+    title: 'PI and Current PhD Students',
+    members: [
+      ...members.filter((member) => member.name === 'Stephen Tu'),
+      ...members.filter((member) => member.role.startsWith('PhD Student')),
+    ],
+  },
+  {
+    id: 'affiliated',
+    title: 'Affiliated Faculty',
+    members: members.filter((member) => member.group === 'affiliated'),
+  },
+  {
+    id: 'masters-undergraduate',
+    title: "Master's and Undergraduate Students",
+    members: [],
+  },
+  {
+    id: 'graduated',
+    title: 'Graduated PhD',
+    members: members.filter((member) => member.role === 'PhD Graduate'),
+  },
+];
+---
+
+<SiteLayout title="People">
+  {sections.map((section) => (
+  <section class="people-section" aria-labelledby={`${section.id}-heading`}>
+    <h2 id={`${section.id}-heading`}>{section.title}</h2>
+    <div class="people-collage" id={`${section.id}-people`}>
+    {section.members.map((member) => {
+      const { index } = member;
+      return (
+      <article class="person" data-shuffle={section.id === 'affiliated' || member.role.startsWith('PhD Student') ? '' : undefined}>
+        <div class:list={['person-photo-frame', { 'person-photo-frame--details': member.additional_info.length > 0 }]}>
+          {member.additional_info.length > 0 ? (
+              <div class="photo-card">
+                {member.website ? (
+                <a class="person-photo-link photo-portrait" href={member.website} aria-label={`${member.name}'s personal website`} aria-describedby={`person-photo-info-${index}`}>
+                  <img class="person-photo" src={member.photo} alt="" width="400" height="400" />
+                </a>
+                ) : (
+                  <div class="photo-portrait" tabindex="0" role="group" aria-label={`${member.name}: additional information`} aria-describedby={`person-photo-info-${index}`}>
+                    <img class="person-photo" src={member.photo} alt={member.profile_photo ? `Portrait of ${member.name}` : ''} width="400" height="400" />
+                  </div>
+                )}
+                <ul class="photo-info" id={`person-photo-info-${index}`} style={{ '--profile-photo': `url("${member.photo}")` }}>
+                  {member.additional_info.map((info: { text: string; link_text?: string | null; url?: string | null; links?: { text: string; url: string }[] }) => {
+                    const links = info.links ?? (info.url ? [{ text: info.link_text ?? info.text, url: info.url }] : []);
+                    const parts: { text: string; url?: string }[] = [];
+                    let cursor = 0;
+                    for (const link of links) {
+                      const start = info.text.indexOf(link.text, cursor);
+                      if (start < 0) throw new Error(`Missing link label in people info: ${link.text}`);
+                      parts.push({ text: info.text.slice(cursor, start) }, link);
+                      cursor = start + link.text.length;
+                    }
+                    parts.push({ text: info.text.slice(cursor) });
+                    return (
+                      <li>
+                        {parts.map((part) => part.url ? <a href={part.url}>{part.text}</a> : part.text)}
+                      </li>
+                    );
+                  })}
+                </ul>
+              </div>
+          ) : member.website ? (
+            <a class="person-photo-link" href={member.website} aria-label={`${member.name}'s personal website`}>
+              <img class="person-photo" src={member.photo} alt="" width="400" height="400" />
+            </a>
+          ) : (
+            <img class="person-photo" src={member.photo} alt={member.profile_photo ? `Portrait of ${member.name}` : ''} width="400" height="400" />
+          )}
+        </div>
+        <div class="person-details">
+          <div class="person-identity">
+          <h3 class="person-name">
+            {member.website ? (
+              <a href={member.website} aria-describedby={member.native_name ? `native-name-${index}` : undefined}>{member.name}</a>
+            ) : (
+              <span tabindex={member.native_name ? 0 : undefined} aria-describedby={member.native_name ? `native-name-${index}` : undefined}>{member.name}</span>
+            )}
+            {member.native_name && (
+              <span class="native-name" id={`native-name-${index}`} role="tooltip" lang="zh">{member.native_name}</span>
+            )}
+          </h3>
+          {member.google_scholar && (
+            <a class="person-link" href={member.google_scholar} aria-label={`${member.name} on Google Scholar`} title="Google Scholar">
+              <img src={scholarIcon} alt="" width="20" height="20" />
+            </a>
+          )}
+          {member.github && (
+            <a class="person-link" href={member.github} aria-label={`${member.name} on GitHub`} title="GitHub">
+              <img src={githubIcon} alt="" width="20" height="20" />
+            </a>
+          )}
+          </div>
+          <p class="person-role">
+            {member.role_link ? (
+              <>{member.role.slice(0, member.role.indexOf(member.role_link.text))}<a href={member.role_link.url}>{member.role_link.text}</a>{member.role.slice(member.role.indexOf(member.role_link.text) + member.role_link.text.length)}</>
+            ) : member.role}
+          </p>
+          {member.research_interests.length > 0 && (
+            <p class="person-interests">{section.id === 'affiliated' && 'Collaboration topics: '}{member.research_interests.join(' · ')}</p>
+          )}
+        </div>
+      </article>
+      );
+    })}
+    </div>
+  </section>
+  ))}
+</SiteLayout>
+
+<script>
+  document.querySelectorAll<HTMLElement>('.people-collage').forEach((group) => {
+    const shuffledMembers = Array.from(group.querySelectorAll<HTMLElement>('[data-shuffle]'));
+    // Shuffle within each group; unmarked members (including the PI) stay first.
+    for (let i = shuffledMembers.length - 1; i > 0; i--) {
+      const j = Math.floor(Math.random() * (i + 1));
+      [shuffledMembers[i], shuffledMembers[j]] = [shuffledMembers[j], shuffledMembers[i]];
+    }
+    group.append(...shuffledMembers);
+  });
+
+  const motionAllowed = window.matchMedia('(hover: hover) and (prefers-reduced-motion: no-preference)');
+
+  document.querySelectorAll<HTMLElement>('.person-photo-frame:not(.person-photo-frame--details)').forEach((frame) => {
+    const reset = () => {
+      frame.style.removeProperty('--tilt-x');
+      frame.style.removeProperty('--tilt-y');
+      frame.removeAttribute('data-tilting');
+    };
+
+    frame.addEventListener('pointermove', (event) => {
+      if (event.pointerType !== 'mouse' || !motionAllowed.matches) return;
+      const bounds = frame.getBoundingClientRect();
+      const x = Math.max(-1, Math.min(1, (event.clientX - bounds.left) / bounds.width * 2 - 1));
+      const y = Math.max(-1, Math.min(1, (event.clientY - bounds.top) / bounds.height * 2 - 1));
+      frame.style.setProperty('--tilt-x', `${-y * 10}deg`);
+      frame.style.setProperty('--tilt-y', `${x * 10}deg`);
+      frame.setAttribute('data-tilting', '');
+    });
+    frame.addEventListener('pointerleave', reset);
+    frame.addEventListener('pointercancel', reset);
+    window.addEventListener('blur', reset);
+    motionAllowed.addEventListener('change', reset);
+  });
+</script>
+
+<style>
+  .people-section { margin-top: 40px; }
+  .people-section > h2 {
+    margin: 0;
+    font-size: clamp(22px, 3vw, 28px);
+    font-weight: 550;
+    letter-spacing: -.025em;
+  }
+  .people-collage {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(0, 220px));
+    align-items: start;
+    gap: 32px 24px;
+    max-width: 1200px;
+    margin-top: 32px;
+  }
+  .person {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 12px;
+    min-width: 0;
+    text-align: center;
+    border-radius: 4px;
+  }
+  .person:focus-within {
+    background: #f0eeea;
+    box-shadow: 0 0 0 10px #f0eeea, 0 0 0 11px #dcd8d0;
+  }
+  @media (hover: hover) {
+    .person:hover {
+      background: #f0eeea;
+      box-shadow: 0 0 0 10px #f0eeea, 0 0 0 11px #dcd8d0;
+    }
+  }
+  .person-photo-frame {
+    width: 150px;
+    max-width: 100%;
+    perspective: 600px;
+  }
+  .person-photo {
+    display: block;
+    width: 100%;
+    height: auto;
+    aspect-ratio: 1;
+    object-fit: cover;
+    border-radius: 4px;
+  }
+  .person-photo-link { display: block; border-radius: 4px; }
+  .photo-card {
+    display: block;
+    position: relative;
+    aspect-ratio: 1;
+    background: #efeeeb;
+    border-radius: 4px;
+    overflow: hidden;
+  }
+  .photo-portrait .person-photo {
+    transition: filter 500ms ease, opacity 500ms ease;
+  }
+  .photo-info {
+    position: absolute;
+    inset: 0;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    gap: 8px;
+    margin: 0;
+    padding: 10px 10px 10px 24px;
+    text-align: left;
+    list-style: disc;
+    border: 1px solid #dcd8d0;
+    border-radius: 4px;
+    background: transparent;
+    color: #252525;
+    font-size: 11px;
+    line-height: 1.4;
+    opacity: 0;
+    visibility: hidden;
+    transition: opacity 350ms ease, visibility 0s linear 350ms;
+    isolation: isolate;
+    overflow: hidden;
+  }
+  .photo-info::before {
+    display: none;
+    content: '';
+    position: absolute;
+    inset: -16px;
+    z-index: -1;
+    background-image: var(--profile-photo);
+    background-position: center;
+    background-size: cover;
+    filter: blur(12px);
+    opacity: 0.35;
+    pointer-events: none;
+  }
+  .person-photo-frame--details .person-photo-link { text-decoration: none; }
+  .person-photo-frame--details:focus-within .photo-info {
+    opacity: 1;
+    visibility: visible;
+    transition-delay: 0s;
+  }
+  .person-photo-frame--details:focus-within .photo-portrait .person-photo {
+    filter: blur(12px);
+    opacity: 0.35;
+  }
+  @media (hover: hover) {
+    .person-photo-frame--details:hover .photo-info {
+      opacity: 1;
+      visibility: visible;
+      transition-delay: 0s;
+    }
+    .person-photo-frame--details:hover .photo-portrait .person-photo {
+      filter: blur(12px);
+      opacity: 0.35;
+    }
+  }
+  @media (prefers-reduced-motion: reduce) {
+    .photo-info, .photo-portrait .person-photo { transition: none; }
+  }
+  @media (hover: none) {
+    .photo-card { aspect-ratio: auto; }
+    .photo-info { position: relative; inset: auto; opacity: 1; visibility: visible; margin-top: 8px; }
+    .photo-info::before { display: block; }
+    .person-photo-frame--details:focus-within .photo-portrait .person-photo { filter: none; opacity: 1; }
+  }
+  @media (hover: hover) and (prefers-reduced-motion: no-preference) {
+    .person-photo-frame:not(.person-photo-frame--details) .person-photo {
+      pointer-events: none;
+      transform: rotateX(var(--tilt-x, 0deg)) rotateY(var(--tilt-y, 0deg));
+      transition: transform 250ms ease-out, box-shadow 250ms ease-out;
+    }
+    .person-photo-frame[data-tilting] .person-photo {
+      transition-duration: 100ms;
+      box-shadow: 0 8px 16px -8px #25252566;
+    }
+  }
+  .person-identity {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-wrap: wrap;
+    gap: 4px;
+  }
+  .person-details { min-width: 0; width: 100%; }
+  .person-role a, .photo-info a {
+    color: #3269a8;
+    text-decoration: underline;
+    text-underline-offset: 2px;
+  }
+  .person-role { margin-top: 2px; font-size: 13px; line-height: 1.45; }
+  .person-interests {
+    margin-top: 12px;
+    padding-top: 12px;
+    border-top: 1px solid #2525251a;
+    font-size: 13px;
+    line-height: 1.5;
+  }
+  .person-name {
+    margin: 0 4px 0 0;
+    font-size: 18px;
+    font-weight: 550;
+    letter-spacing: -.025em;
+    line-height: 1.3;
+  }
+  .person-name a { color: inherit; text-decoration: none; }
+  .person-name a:hover { text-decoration: underline; text-underline-offset: 4px; }
+  .person-name { position: relative; }
+  .native-name {
+    position: absolute;
+    bottom: 100%;
+    left: 50%;
+    transform: translateX(-50%);
+    z-index: 2;
+    padding: 5px 10px;
+    border-radius: 4px;
+    background: #252525;
+    color: #fff;
+    font-size: 14px;
+    font-weight: 400;
+    white-space: nowrap;
+    visibility: hidden;
+  }
+  .person-name:hover .native-name,
+  .person-name:focus-within .native-name { visibility: visible; }
+  .person-link {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 32px;
+    height: 32px;
+    border-radius: 4px;
+  }
+  .person-link:hover { background: #e9e7e2; }
+  .person-link img { display: block; }
+  @media (max-width: 540px) {
+    .people-collage {
+      grid-template-columns: repeat(auto-fit, minmax(min(100%, 160px), 1fr));
+      gap: 28px 16px;
+    }
+    .person { max-width: 220px; justify-self: center; }
+  }
+</style>
