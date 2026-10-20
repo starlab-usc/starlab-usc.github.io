@@ -1,4 +1,4 @@
-import { Component, lazy, Suspense, useEffect, useRef, useState } from 'react';
+import { Component, lazy, Suspense, useEffect, useState } from 'react';
 import type { ReactNode } from 'react';
 import logoUrl from '../../assets/STARLab_logo.svg?url';
 
@@ -15,7 +15,6 @@ class SceneBoundary extends Component<
 }
 
 export default function InteractiveLogo({ children }: { children: ReactNode }) {
-  const brandRef = useRef<HTMLDivElement>(null);
   const [enabled, setEnabled] = useState(false);
   const [ready, setReady] = useState(false);
   const [failed, setFailed] = useState(false);
@@ -38,30 +37,30 @@ export default function InteractiveLogo({ children }: { children: ReactNode }) {
   const active = enabled && !failed;
 
   useEffect(() => {
-    // The shared Astro banner owns the hover area; only the badge receives the tilt.
-    const banner = brandRef.current?.closest<HTMLElement>('.banner');
-    if (!active || !banner) return;
+    if (!active) return;
 
+    // Track the whole viewport while keeping the badge's existing tilt range.
     const move = (event: PointerEvent) => {
-      const bounds = banner.getBoundingClientRect();
-      const x = (event.clientX - bounds.left) / bounds.width * 2 - 1;
-      const y = (event.clientY - bounds.top) / bounds.height * 2 - 1;
+      const x = Math.max(-1, Math.min(1, event.clientX / window.innerWidth * 2 - 1));
+      const y = Math.max(-1, Math.min(1, event.clientY / window.innerHeight * 2 - 1));
       setTarget([y * 0.35, x * 0.44]);
     };
     const reset = () => setTarget([0, 0]);
 
-    banner.addEventListener('pointermove', move);
-    banner.addEventListener('pointerleave', reset);
-    banner.addEventListener('pointercancel', reset);
+    window.addEventListener('pointermove', move);
+    document.documentElement.addEventListener('pointerleave', reset);
+    window.addEventListener('pointercancel', reset);
+    window.addEventListener('blur', reset);
     return () => {
-      banner.removeEventListener('pointermove', move);
-      banner.removeEventListener('pointerleave', reset);
-      banner.removeEventListener('pointercancel', reset);
+      window.removeEventListener('pointermove', move);
+      document.documentElement.removeEventListener('pointerleave', reset);
+      window.removeEventListener('pointercancel', reset);
+      window.removeEventListener('blur', reset);
     };
   }, [active]);
 
   return (
-    <div className="brand" ref={brandRef}>
+    <div className="brand">
       <div className="logo" role="img" aria-label="STARLab logo" data-ready={active && ready}>
         <img className="logo__fallback" src={logoUrl} alt="" width="65.616" height="80" />
         {active && (
