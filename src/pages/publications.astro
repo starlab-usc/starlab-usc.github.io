@@ -50,14 +50,24 @@ const resourceIcons: Record<string, string> = { arXiv: arxivIcon, PDF: pdfIcon }
     {publications.filter((publication) => publication.year === year).map((publication) => (
     <article aria-labelledby={`publication-${publication.id}`}>
       {publication.thumbnail ? (
-      <Image
+      <div
         class="publication-thumbnail"
+        class:list={{ 'publication-thumbnail--expandable': publication.thumbnail.width !== publication.thumbnail.height }}
+        tabindex={publication.thumbnail.width !== publication.thumbnail.height ? 0 : undefined}
+        role="img"
+        aria-label={`Figure for ${publication.title}`}
+        style={`--thumbnail-width: ${132 * Math.max(1, publication.thumbnail.width / publication.thumbnail.height)}px`}
+      >
+      <div class="thumbnail-reveal">
+      <Image
         src={publication.thumbnail}
         alt=""
-        widths={[132, 264]}
-        sizes="132px"
+        widths={[132, 264, 528, 1056]}
+        sizes={`${132 * Math.max(1, publication.thumbnail.width / publication.thumbnail.height)}px`}
         format="webp"
       />
+      </div>
+      </div>
       ) : (
       <div class="publication-thumbnail publication-thumbnail--empty" aria-hidden="true"></div>
       )}
@@ -91,11 +101,25 @@ const resourceIcons: Record<string, string> = { arXiv: arxivIcon, PDF: pdfIcon }
   ))}
 </SiteLayout>
 
+<script>
+  const expandableThumbnails = document.querySelectorAll<HTMLElement>('.publication-thumbnail--expandable');
+  document.addEventListener('keydown', (event) => {
+    if (event.key === 'Escape') {
+      expandableThumbnails.forEach((thumbnail) => { thumbnail.dataset.dismissed = ''; });
+    }
+  });
+  expandableThumbnails.forEach((thumbnail) => {
+    thumbnail.addEventListener('pointerenter', () => { delete thumbnail.dataset.dismissed; });
+    thumbnail.addEventListener('focus', () => { delete thumbnail.dataset.dismissed; });
+  });
+</script>
+
 <style>
   section { max-width: 960px; }
   h2 { margin: 0; font-size: 24px; }
   .year-toggle { margin: 32px 0 16px; }
   article {
+    container-type: inline-size;
     display: grid;
     grid-template-columns: 132px minmax(0, 1fr);
     gap: 24px;
@@ -113,8 +137,39 @@ const resourceIcons: Record<string, string> = { arXiv: arxivIcon, PDF: pdfIcon }
       box-shadow: 0 0 0 10px var(--hover-bg), 0 0 0 11px var(--hover-border);
     }
   }
-  .publication-thumbnail { display: block; width: 132px; max-width: 100%; height: auto; }
-  .publication-thumbnail--empty { aspect-ratio: 1; }
+  .publication-thumbnail {
+    position: relative;
+    width: 132px;
+    max-width: 100%;
+    aspect-ratio: 1;
+  }
+  .thumbnail-reveal {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: min(var(--thumbnail-width), 100cqi);
+    clip-path: inset(0 max(0px, calc(100% - 132px)) max(0px, calc(100% - 132px)) 0);
+    background: var(--page-bg);
+    z-index: 1;
+  }
+  .thumbnail-reveal img { display: block; width: 100%; height: auto; }
+  .publication-thumbnail--expandable:focus-visible {
+    outline: 2px solid currentColor;
+    outline-offset: 4px;
+  }
+  .publication-thumbnail--expandable:not([data-dismissed]):focus-visible .thumbnail-reveal {
+    clip-path: inset(0);
+  }
+  @media (hover: hover) {
+    .publication-thumbnail--expandable:not([data-dismissed]):hover .thumbnail-reveal {
+      clip-path: inset(0);
+    }
+  }
+  @media (hover: none) {
+    .publication-thumbnail--expandable:not([data-dismissed]):focus .thumbnail-reveal {
+      clip-path: inset(0);
+    }
+  }
   @media (max-width: 640px) {
     article { grid-template-columns: minmax(0, 1fr); }
   }
@@ -148,6 +203,7 @@ const resourceIcons: Record<string, string> = { arXiv: arxivIcon, PDF: pdfIcon }
   details[open] > summary::before { transform: rotate(90deg); }
   @media (prefers-reduced-motion: no-preference) {
     summary::before { transition: transform 180ms ease; }
+    .thumbnail-reveal { transition: clip-path 180ms ease; }
   }
   pre {
     padding: 16px;

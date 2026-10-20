@@ -2,6 +2,9 @@
 
 Papers without a thumbnail reserve a transparent 132px square. The page or
 highlighted row background shows through in both light and dark mode.
+Non-square thumbnails show a 132px square crop and reveal the full figure over
+the adjacent text when hovered or keyboard-focused (tap to focus on touchscreens).
+The reveal preserves the image's aspect ratio and fits within the row width.
 
 Keep each paper in its own `year_venue_short_title/` folder:
 
@@ -13,9 +16,10 @@ Keep each paper in its own `year_venue_short_title/` folder:
 - An existing `thumbnail.png` is displayed when available; otherwise the page
   uses the transparent placeholder. Other supporting assets can live beside these files.
 
-Keep shared title and author information in both files consistent when editing.
-Use full conference and journal names in `venue` and the corresponding BibTeX
-field, rather than venue acronyms. Unpublished papers use `Preprint`.
+Keep shared title, author, and year information in both files consistent when editing.
+Use full conference and journal names in `venue`, rather than venue acronyms.
+BibTeX uses the full proceedings or journal title from the publisher; this can
+differ from the display conference name. Unpublished papers use `Preprint`.
 The publication year refers to the conference or journal, which may differ
 from the year of an arXiv preprint. Preprints use their initial arXiv year.
 `src/pages/publications.astro` automatically imports each folder's JSON and
@@ -23,25 +27,13 @@ BibTeX, groups papers by descending year, and sorts titles within each year.
 BibTeX uses Vite's `?raw` import for the disclosure. Resource links use local
 SVG icons with accessible labels for arXiv and PDF.
 
-The 67 paper records were populated from https://stephentu.github.io/ on
-2026-10-19: current and old preprints, journal articles, and conference
-proceedings. The thesis and informal writings are outside this collection.
-Distinct conference and journal versions remain separate entries.
-Titles, author order, venues, years, and annotations follow that page;
-arXiv abstract links are normalized and paired with their PDF URLs.
-Other paper, slides, and code links are retained when listed.
-No new thumbnails were created or downloaded.
+The collection was initially populated from https://stephentu.github.io/.
+All 18 current records were audited on 2026-10-19 against paper metadata,
+publisher proceedings, journal records, and publisher-deposited Crossref data.
+See [the citation audit](CITATION_AUDIT.md) for per-paper sources and remaining
+publication-status limits. BibTeX URLs prefer the published version; display
+resource links can still point to the freely available arXiv version.
 
-New BibTeX records are assembled from the listed metadata, not publisher
-exports. Unlisted DOIs and page ranges are omitted. Journal volumes and
-numbers are retained when provided. “Learning Robust Hybrid Control Barrier
-Functions for Uncertain Systems” has no venue or year listed on the source
-page, so it is represented as a 2021 arXiv preprint without an inferred venue.
-Source years are preserved, including the 2025 journal entry for “Safely
-learning dynamical systems” and the 2014 VLDB entry for “Anti-Caching.”
-
-For `2025_cdc_latent_representation`, the title and author order were checked
-against https://arxiv.org/abs/2505.23210. The site owner supplied CDC 2025 as
-the venue. The conference citation was assembled from those details, rather
-than copied from the current arXiv export (which cites the 2026 revision).
-Publisher DOI and page numbers have not been verified and are omitted.
+“Safely Learning Dynamical Systems” uses the final journal issue year, 2026,
+rather than its online-first year, 2025. Existing folder names and citation
+keys remain stable even when a paper's title or publication year is corrected.
