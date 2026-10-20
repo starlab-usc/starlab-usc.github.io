@@ -1,0 +1,20 @@
+{
+  "title": "Learning from many trajectories",
+  "authors": [
+    "Stephen Tu",
+    "Roy Frostig",
+    "Mahdi Soltanolkotabi"
+  ],
+  "year": 2024,
+  "venue": "Journal of Machine Learning Research",
+  "links": [
+    {
+      "label": "arXiv",
+      "url": "https://arxiv.org/abs/2203.17193"
+    },
+    {
+      "label": "PDF",
+      "url": "https://arxiv.org/pdf/2203.17193"
+    }
+  ]
+}

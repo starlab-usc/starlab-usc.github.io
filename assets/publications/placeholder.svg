@@ -1,9 +1,0 @@
-<svg xmlns="http://www.w3.org/2000/svg" width="264" height="264" viewBox="0 0 264 264" fill="none">
-  <title>Paper thumbnail placeholder</title>
-  <rect width="264" height="264" rx="8" fill="#F0EEEA"/>
-  <path d="M83 57h70l30 30v120H83V57Z" fill="#FAF9F6" stroke="#B8B3A9" stroke-width="3" stroke-linejoin="round"/>
-  <path d="M153 57v30h30" stroke="#B8B3A9" stroke-width="3" stroke-linejoin="round"/>
-  <path d="M102 111h62M102 123h44" stroke="#8C877E" stroke-width="4" stroke-linecap="round"/>
-  <rect x="102" y="141" width="62" height="28" rx="3" fill="#DCD8D0"/>
-  <path d="M102 184h62M102 194h44" stroke="#B8B3A9" stroke-width="3" stroke-linecap="round"/>
-</svg>

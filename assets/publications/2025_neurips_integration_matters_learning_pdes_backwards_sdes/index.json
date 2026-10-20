@@ -1,0 +1,20 @@
+{
+  "title": "Integration Matters for Learning PDEs with Backwards SDEs",
+  "authors": [
+    "Sungje Park",
+    "Stephen Tu"
+  ],
+  "year": 2025,
+  "venue": "Conference on Neural Information Processing Systems",
+  "links": [
+    {
+      "label": "arXiv",
+      "url": "https://arxiv.org/abs/2505.01078"
+    },
+    {
+      "label": "PDF",
+      "url": "https://arxiv.org/pdf/2505.01078"
+    }
+  ],
+  "note": "Spotlight."
+}

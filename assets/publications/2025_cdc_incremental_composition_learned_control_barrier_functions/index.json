@@ -1,0 +1,21 @@
+{
+  "title": "Incremental Composition of Learned Control Barrier Functions in Unknown Environments",
+  "authors": [
+    "Paul Lutkus",
+    "Deepika Anantharaman",
+    "Stephen Tu",
+    "Lars Lindemann"
+  ],
+  "year": 2025,
+  "venue": "IEEE Conference on Decision and Control",
+  "links": [
+    {
+      "label": "arXiv",
+      "url": "https://arxiv.org/abs/2409.12382"
+    },
+    {
+      "label": "PDF",
+      "url": "https://arxiv.org/pdf/2409.12382"
+    }
+  ]
+}

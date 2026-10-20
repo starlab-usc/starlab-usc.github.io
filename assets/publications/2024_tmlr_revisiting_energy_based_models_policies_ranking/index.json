@@ -1,0 +1,20 @@
+{
+  "title": "Revisiting Energy Based Models as Policies: Ranking Noise Contrastive Estimation and Interpolating Energy Models",
+  "authors": [
+    "Sumeet Singh",
+    "Stephen Tu",
+    "Vikas Sindhwani"
+  ],
+  "year": 2024,
+  "venue": "Transactions on Machine Learning Research",
+  "links": [
+    {
+      "label": "arXiv",
+      "url": "https://arxiv.org/abs/2309.05803"
+    },
+    {
+      "label": "PDF",
+      "url": "https://arxiv.org/pdf/2309.05803"
+    }
+  ]
+}

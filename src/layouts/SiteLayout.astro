@@ -23,6 +23,15 @@ const navigation = [
     <meta name="description" content="StarLab" />
     <link rel="icon" type="image/svg+xml" href={logoUrl} />
     <title>{title ? `${title} | StarLab` : 'StarLab'}</title>
+    <script is:inline>
+      // Apply the saved preference before the first paint.
+      let savedTheme;
+      try { savedTheme = localStorage.getItem('theme'); } catch {}
+      document.documentElement.dataset.theme =
+        savedTheme === 'light' || savedTheme === 'dark'
+          ? savedTheme
+          : window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light';
+    </script>
   </head>
   <body>
     <header class="banner" aria-label="StarLab">
@@ -41,6 +50,17 @@ const navigation = [
         {navigation.map(({ href, label }) => (
           <a href={href} aria-current={currentPath === href ? 'page' : undefined}>{label}</a>
         ))}
+        <button class="theme-toggle" type="button" role="switch" aria-label="Dark mode" aria-checked="false" title="Toggle dark mode">
+          <span class="theme-thumb" aria-hidden="true">
+          <svg class="theme-moon" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+            <path d="M20.9 13A9 9 0 0 1 11 3.1 9 9 0 1 0 20.9 13Z" />
+          </svg>
+          <svg class="theme-sun" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" aria-hidden="true">
+            <circle cx="12" cy="12" r="4" />
+            <path d="M12 2v2m0 16v2M2 12h2m16 0h2M4.93 4.93l1.42 1.42m11.3 11.3 1.42 1.42M4.93 19.07l1.42-1.42m11.3-11.3 1.42-1.42" />
+          </svg>
+          </span>
+        </button>
       </nav>
     </header>
     <main>
@@ -50,13 +70,64 @@ const navigation = [
   </body>
 </html>
 
+<script>
+  const toggle = document.querySelector<HTMLButtonElement>('.theme-toggle')!;
+  const root = document.documentElement;
+  const systemTheme = window.matchMedia('(prefers-color-scheme: dark)');
+  const syncToggle = () => {
+    const dark = root.dataset.theme === 'dark';
+    toggle.setAttribute('aria-checked', String(dark));
+    toggle.title = dark ? 'Switch to light mode' : 'Switch to dark mode';
+  };
+  syncToggle();
+  let userSelected = false;
+  try { userSelected = ['light', 'dark'].includes(localStorage.getItem('theme') ?? ''); } catch {}
+  toggle.addEventListener('click', () => {
+    root.dataset.theme = root.dataset.theme === 'dark' ? 'light' : 'dark';
+    userSelected = true;
+    try { localStorage.setItem('theme', root.dataset.theme); } catch {}
+    syncToggle();
+  });
+  systemTheme.addEventListener('change', ({ matches }) => {
+    if (userSelected) return;
+    root.dataset.theme = matches ? 'dark' : 'light';
+    syncToggle();
+  });
+</script>
+
 <style is:global>
+  :root {
+    color-scheme: light;
+    --page-bg: #faf9f6;
+    --surface-bg: #fff;
+    --text: #252525;
+    --muted: #626262;
+    --border: #e9e7e2;
+    --hover-bg: #f0eeea;
+    --hover-border: #dcd8d0;
+    --card-bg: #efeeeb;
+    --link: #3269a8;
+    --divider: #2525251a;
+  }
+  :root[data-theme="dark"] {
+    color-scheme: dark;
+    --page-bg: #202020;
+    --surface-bg: #181818;
+    --text: #efeeeb;
+    --muted: #b8b6b1;
+    --border: #383838;
+    --hover-bg: #2d2d2d;
+    --hover-border: #494949;
+    --card-bg: #303030;
+    --link: #8cbbef;
+    --divider: #ffffff26;
+  }
   * { box-sizing: border-box; }
   html, body { margin: 0; min-height: 100%; }
   body {
-    background: #faf9f6;
+    background: var(--page-bg);
     font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
-    color: #252525;
+    color: var(--text);
   }
   .banner {
     display: flex;
@@ -65,8 +136,8 @@ const navigation = [
     gap: 0;
     min-height: 128px;
     padding: 12px clamp(16px, 4vw, 64px);
-    background: #fff;
-    border-bottom: 1px solid #e9e7e2;
+    background: var(--surface-bg);
+    border-bottom: 1px solid var(--border);
   }
   .brand {
     display: flex;
@@ -94,7 +165,7 @@ const navigation = [
     margin: 4px 0 0;
     font-size: 0.23em;
     line-height: 1.4;
-    color: #626262;
+    color: var(--muted);
     white-space: nowrap;
   }
   .lab-name .reasoning-line {
@@ -106,6 +177,7 @@ const navigation = [
   .site-title a { color: inherit; text-decoration: none; }
   nav {
     display: flex;
+    align-items: center;
     flex-wrap: wrap;
     gap: 24px;
     margin-left: auto;
@@ -121,12 +193,58 @@ const navigation = [
     text-decoration: underline;
     text-underline-offset: 6px;
   }
-  a:focus-visible { outline: 2px solid currentColor; outline-offset: 6px; }
+  a:focus-visible, button:focus-visible { outline: 2px solid currentColor; outline-offset: 6px; }
+  .theme-toggle {
+    position: relative;
+    flex-shrink: 0;
+    width: 60px;
+    height: 44px;
+    margin-left: auto;
+    padding: 0;
+    border: 0;
+    border-radius: 999px;
+    background: transparent;
+    color: inherit;
+    cursor: pointer;
+  }
+  .theme-toggle::before {
+    content: '';
+    position: absolute;
+    inset: 6px 0;
+    border-radius: inherit;
+    background: var(--hover-bg);
+    border: 1px solid var(--muted);
+  }
+  .theme-toggle:hover::before { border-color: var(--text); }
+  .theme-thumb {
+    position: absolute;
+    top: 10px;
+    left: 4px;
+    display: grid;
+    place-items: center;
+    width: 24px;
+    height: 24px;
+    border-radius: 50%;
+    background: var(--text);
+    color: var(--surface-bg);
+  }
+  .theme-thumb svg { position: absolute; }
+  .theme-moon { opacity: 0; transform: rotate(-90deg) scale(.5); }
+  [data-theme="dark"] .theme-thumb { transform: translateX(28px); }
+  [data-theme="dark"] .theme-sun { opacity: 0; transform: rotate(90deg) scale(.5); }
+  [data-theme="dark"] .theme-moon { opacity: 1; transform: rotate(0) scale(1); }
+  @media (prefers-reduced-motion: no-preference) {
+    .theme-thumb { transition: transform 240ms ease, background-color 240ms ease, color 240ms ease; }
+    .theme-thumb svg { transition: opacity 180ms ease, transform 240ms ease; }
+    .theme-toggle::before { transition: background-color 240ms ease, border-color 240ms ease; }
+  }
+  /* The achromatic WebGL logo has a white backdrop; map it to the dark banner. */
+  [data-theme="dark"] .logo { filter: invert(0.906); }
   main { padding: 40px clamp(16px, 4vw, 64px); }
   main h1 { margin: 0 0 16px; font-size: clamp(32px, 5vw, 48px); }
-  main p { margin: 0; color: #626262; line-height: 1.6; }
+  main p { margin: 0; color: var(--muted); line-height: 1.6; }
   @media (max-width: 540px) {
-    nav { width: 100%; margin-left: 0; padding-left: 0; }
+    nav { width: 100%; margin-left: 0; padding-left: 0; gap: 10px; }
   }
   .logo {
     position: relative;

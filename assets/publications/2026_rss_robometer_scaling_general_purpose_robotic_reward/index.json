@@ -1,0 +1,35 @@
+{
+  "title": "Robometer: Scaling General-Purpose Robotic Reward Models via Trajectory Comparisons",
+  "authors": [
+    "Anthony Liang",
+    "Yigit Korkmaz",
+    "Jiahui Zhang",
+    "Minyoung Hwang",
+    "Abrar Anwar",
+    "Sidhant Kaushik",
+    "Aditya Shah",
+    "Alex S. Huang",
+    "Luke Zettlemoyer",
+    "Dieter Fox",
+    "Yu Xiang",
+    "Anqi Li",
+    "Andreea Bobu",
+    "Abhishek Gupta",
+    "Stephen Tu",
+    "Erdem Biyik",
+    "Jesse Zhang"
+  ],
+  "year": 2026,
+  "venue": "Robotics: Science and Systems",
+  "links": [
+    {
+      "label": "arXiv",
+      "url": "https://arxiv.org/abs/2603.02115"
+    },
+    {
+      "label": "PDF",
+      "url": "https://arxiv.org/pdf/2603.02115"
+    }
+  ],
+  "note": "Equal advising: Stephen Tu, Erdem Biyik, Jesse Zhang."
+}

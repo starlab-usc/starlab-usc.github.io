@@ -1,0 +1,24 @@
+{
+  "title": "CLAM: Continuous Latent Action Models for Robot Learning from Unlabeled Demonstrations",
+  "authors": [
+    "Anthony Liang",
+    "Pavel Czempin",
+    "Matthew Hong",
+    "Yutai Zhou",
+    "Erdem Bıyık",
+    "Stephen Tu"
+  ],
+  "year": 2026,
+  "venue": "IEEE/RSJ International Conference on Intelligent Robots and Systems",
+  "links": [
+    {
+      "label": "arXiv",
+      "url": "https://arxiv.org/abs/2505.04999"
+    },
+    {
+      "label": "PDF",
+      "url": "https://arxiv.org/pdf/2505.04999"
+    }
+  ],
+  "note": "To appear. Equal advising: Erdem Bıyık, Stephen Tu."
+}

@@ -1,0 +1,21 @@
+{
+  "title": "Single hidden layer diffusion models provably learn simple low-dimensional structure",
+  "authors": [
+    "Nicholas M. Boffi",
+    "Arthur Jacot",
+    "Stephen Tu",
+    "Ingvar Ziemann"
+  ],
+  "year": 2025,
+  "venue": "International Conference on Learning Representations",
+  "links": [
+    {
+      "label": "arXiv",
+      "url": "https://arxiv.org/abs/2410.11275"
+    },
+    {
+      "label": "PDF",
+      "url": "https://arxiv.org/pdf/2410.11275"
+    }
+  ]
+}

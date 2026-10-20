@@ -1,0 +1,22 @@
+{
+  "title": "CrispEdit: Low-Curvature Projections for Scalable Non-Destructive LLM Editing",
+  "authors": [
+    "Zarif Ikram",
+    "Arad Firouzkouhi",
+    "Stephen Tu",
+    "Mahdi Soltanolkotabi",
+    "Paria Rashidinejad"
+  ],
+  "year": 2026,
+  "venue": "International Conference on Machine Learning",
+  "links": [
+    {
+      "label": "arXiv",
+      "url": "https://arxiv.org/abs/2602.15823"
+    },
+    {
+      "label": "PDF",
+      "url": "https://arxiv.org/pdf/2602.15823"
+    }
+  ]
+}

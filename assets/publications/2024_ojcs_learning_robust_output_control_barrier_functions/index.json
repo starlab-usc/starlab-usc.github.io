@@ -1,0 +1,23 @@
+{
+  "title": "Learning Robust Output Control Barrier Functions from Safe Expert Demonstrations",
+  "authors": [
+    "Lars Lindemann",
+    "Alexander Robey",
+    "Lejun Jiang",
+    "Satyajeet Das",
+    "Stephen Tu",
+    "Nikolai Matni"
+  ],
+  "year": 2024,
+  "venue": "IEEE Open Journal of Control Systems",
+  "links": [
+    {
+      "label": "arXiv",
+      "url": "https://arxiv.org/abs/2111.09971"
+    },
+    {
+      "label": "PDF",
+      "url": "https://arxiv.org/pdf/2111.09971"
+    }
+  ]
+}

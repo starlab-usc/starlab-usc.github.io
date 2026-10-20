@@ -109,7 +109,7 @@ const sections = [
             </a>
           )}
           {member.github && (
-            <a class="person-link" href={member.github} aria-label={`${member.name} on GitHub`} title="GitHub">
+            <a class="person-link person-link--github" href={member.github} aria-label={`${member.name} on GitHub`} title="GitHub">
               <img src={githubIcon} alt="" width="20" height="20" />
             </a>
           )}
@@ -193,13 +193,13 @@ const sections = [
     border-radius: 4px;
   }
   .person:focus-within {
-    background: #f0eeea;
-    box-shadow: 0 0 0 10px #f0eeea, 0 0 0 11px #dcd8d0;
+    background: var(--hover-bg);
+    box-shadow: 0 0 0 10px var(--hover-bg), 0 0 0 11px var(--hover-border);
   }
   @media (hover: hover) {
     .person:hover {
-      background: #f0eeea;
-      box-shadow: 0 0 0 10px #f0eeea, 0 0 0 11px #dcd8d0;
+      background: var(--hover-bg);
+      box-shadow: 0 0 0 10px var(--hover-bg), 0 0 0 11px var(--hover-border);
     }
   }
   .person-photo-frame {
@@ -220,7 +220,7 @@ const sections = [
     display: block;
     position: relative;
     aspect-ratio: 1;
-    background: #efeeeb;
+    background: var(--card-bg);
     border-radius: 4px;
     overflow: hidden;
   }
@@ -238,10 +238,10 @@ const sections = [
     padding: 10px 10px 10px 24px;
     text-align: left;
     list-style: disc;
-    border: 1px solid #dcd8d0;
+    border: 1px solid var(--hover-border);
     border-radius: 4px;
     background: transparent;
-    color: #252525;
+    color: var(--text);
     font-size: 11px;
     line-height: 1.4;
     opacity: 0;
@@ -313,7 +313,7 @@ const sections = [
   }
   .person-details { min-width: 0; width: 100%; }
   .person-role a, .photo-info a {
-    color: #3269a8;
+    color: var(--link);
     text-decoration: underline;
     text-underline-offset: 2px;
   }
@@ -321,7 +321,7 @@ const sections = [
   .person-interests {
     margin-top: 12px;
     padding-top: 12px;
-    border-top: 1px solid #2525251a;
+    border-top: 1px solid var(--divider);
     font-size: 13px;
     line-height: 1.5;
   }
@@ -360,7 +360,8 @@ const sections = [
     height: 32px;
     border-radius: 4px;
   }
-  .person-link:hover { background: #e9e7e2; }
+  .person-link:hover { background: var(--border); }
+  :global([data-theme="dark"]) .person-link--github img { filter: invert(1); }
   .person-link img { display: block; }
   @media (max-width: 540px) {
     .people-collage {

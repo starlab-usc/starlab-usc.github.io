@@ -1,30 +1,70 @@
 ---
 import SiteLayout from '../layouts/SiteLayout.astro';
 import { Image } from 'astro:assets';
-import thumbnail from '../../assets/publications/2025_cdc_latent_representation/thumbnail.png';
-import publication from '../../assets/publications/2025_cdc_latent_representation/index.json';
-import bibtex from '../../assets/publications/2025_cdc_latent_representation/citation.bib?raw';
+import type { ImageMetadata } from 'astro';
 import arxivIcon from '../../assets/arxiv.svg?url';
 import pdfIcon from '../../assets/pdf.svg?url';
 
+interface Publication {
+  title: string;
+  authors: string[];
+  year: number;
+  venue: string;
+  links: { label: string; url: string }[];
+  note?: string;
+}
+
+const metadata = import.meta.glob<Publication>('../../assets/publications/*/index.json', {
+  eager: true,
+  import: 'default',
+});
+const citations = import.meta.glob<string>('../../assets/publications/*/citation.bib', {
+  eager: true,
+  query: '?raw',
+  import: 'default',
+});
+const thumbnails = import.meta.glob<ImageMetadata>('../../assets/publications/*/thumbnail.png', {
+  eager: true,
+  import: 'default',
+});
+const publications = Object.entries(metadata).map(([path, publication]) => {
+  const directory = path.slice(0, -'index.json'.length);
+  const bibtex = citations[`${directory}citation.bib`];
+  if (!bibtex) throw new Error(`Missing publication citation: ${directory}`);
+  return {
+    ...publication,
+    id: directory.split('/').filter(Boolean).at(-1)!,
+    bibtex,
+    thumbnail: thumbnails[`${directory}thumbnail.png`],
+  };
+}).sort((a, b) => b.year - a.year || a.title.localeCompare(b.title));
+const years = [...new Set(publications.map((publication) => publication.year))];
 const resourceIcons: Record<string, string> = { arXiv: arxivIcon, PDF: pdfIcon };
 ---
 
 <SiteLayout title="Publications">
-  <section aria-labelledby="publication-year">
-    <h2 id="publication-year">{publication.year}</h2>
-    <article aria-labelledby="publication-title">
+  {years.map((year) => (
+  <section aria-labelledby={`publication-year-${year}`}>
+    <details class="year-group" open>
+    <summary class="year-toggle"><h2 id={`publication-year-${year}`}>{year}</h2></summary>
+    {publications.filter((publication) => publication.year === year).map((publication) => (
+    <article aria-labelledby={`publication-${publication.id}`}>
+      {publication.thumbnail ? (
       <Image
         class="publication-thumbnail"
-        src={thumbnail}
-        alt="Stability in latent space, above safety in latent space: diagrams relating latent certificates to guarantees in the original state space."
+        src={publication.thumbnail}
+        alt=""
         widths={[132, 264]}
         sizes="132px"
         format="webp"
       />
+      ) : (
+      <div class="publication-thumbnail publication-thumbnail--empty" aria-hidden="true"></div>
+      )}
       <div class="publication-info">
-      <h3 id="publication-title">{publication.title}</h3>
+      <h3 id={`publication-${publication.id}`}>{publication.title}</h3>
       <p>{publication.authors.join(', ')}</p>
+      {publication.note && <p class="publication-note">{publication.note}</p>}
       <div class="venue-line">
         <span class="venue">{publication.venue}, {publication.year}</span>
         {publication.links.map((link) => (
@@ -40,17 +80,21 @@ const resourceIcons: Record<string, string> = { arXiv: arxivIcon, PDF: pdfIcon }
         <span class="separator" aria-hidden="true"> | </span>
         <details>
           <summary>BibTeX</summary>
-          <pre><code>{bibtex}</code></pre>
+          <pre><code>{publication.bibtex}</code></pre>
         </details>
       </div>
       </div>
     </article>
+    ))}
+    </details>
   </section>
+  ))}
 </SiteLayout>
 
 <style>
   section { max-width: 960px; }
-  h2 { margin: 32px 0 16px; font-size: 24px; }
+  h2 { margin: 0; font-size: 24px; }
+  .year-toggle { margin: 32px 0 16px; }
   article {
     display: grid;
     grid-template-columns: 132px minmax(0, 1fr);
@@ -60,22 +104,24 @@ const resourceIcons: Record<string, string> = { arXiv: arxivIcon, PDF: pdfIcon }
     border-radius: 4px;
   }
   article:focus-within {
-    background: #f0eeea;
-    box-shadow: 0 0 0 10px #f0eeea, 0 0 0 11px #dcd8d0;
+    background: var(--hover-bg);
+    box-shadow: 0 0 0 10px var(--hover-bg), 0 0 0 11px var(--hover-border);
   }
   @media (hover: hover) {
     article:hover {
-      background: #f0eeea;
-      box-shadow: 0 0 0 10px #f0eeea, 0 0 0 11px #dcd8d0;
+      background: var(--hover-bg);
+      box-shadow: 0 0 0 10px var(--hover-bg), 0 0 0 11px var(--hover-border);
     }
   }
   .publication-thumbnail { display: block; width: 132px; max-width: 100%; height: auto; }
+  .publication-thumbnail--empty { aspect-ratio: 1; }
   @media (max-width: 640px) {
     article { grid-template-columns: minmax(0, 1fr); }
   }
   h3 { margin: 0 0 12px; font-size: 22px; line-height: 1.4; }
+  .publication-note { color: var(--muted); font-size: 14px; margin-top: 4px; }
   .venue-line { margin-top: 4px; line-height: 1.8; }
-  .venue, .separator { color: #626262; }
+  .venue, .separator { color: var(--muted); }
   .separator { margin: 0 6px; }
   a { color: inherit; text-underline-offset: 3px; }
   .resource-link, summary {
@@ -86,13 +132,26 @@ const resourceIcons: Record<string, string> = { arXiv: arxivIcon, PDF: pdfIcon }
     vertical-align: middle;
     border-radius: 4px;
   }
-  .resource-link:hover, summary:hover { background: #f0eee9; }
-  details { display: inline; }
-  summary { cursor: pointer; width: fit-content; }
+  :global([data-theme="dark"]) .resource-link img { filter: brightness(1.8); }
+  .resource-link:hover, summary:hover { background: var(--hover-bg); }
+  .venue-line > details { display: inline; }
+  summary { cursor: pointer; width: fit-content; gap: 6px; }
   summary::-webkit-details-marker { display: none; }
+  summary::before {
+    content: '';
+    width: 0;
+    height: 0;
+    border-top: 4px solid transparent;
+    border-bottom: 4px solid transparent;
+    border-left: 6px solid currentColor;
+  }
+  details[open] > summary::before { transform: rotate(90deg); }
+  @media (prefers-reduced-motion: no-preference) {
+    summary::before { transition: transform 180ms ease; }
+  }
   pre {
     padding: 16px;
-    background: #f0eee9;
+    background: var(--surface-bg);
     white-space: pre-wrap;
     overflow-wrap: anywhere;
     font-size: 14px;
