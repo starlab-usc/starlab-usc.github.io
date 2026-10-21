@@ -1,9 +1,12 @@
 ---
 import { render, type CollectionEntry } from 'astro:content';
+import { createSatteriMarkdownProcessor } from '@astrojs/markdown-satteri';
 
 interface Props { entry: CollectionEntry<'news'>; }
 const { entry } = Astro.props;
 const { Content } = await render(entry);
+const markdown = await createSatteriMarkdownProcessor({ syntaxHighlight: false });
+const summary = await markdown.render(entry.data.summary);
 const date = new Date(`${entry.data.date}T00:00:00Z`);
 const dateLabel = new Intl.DateTimeFormat('en-US', {
   month: 'short', day: 'numeric', year: 'numeric', timeZone: 'UTC',
@@ -17,7 +20,7 @@ const dateLabel = new Intl.DateTimeFormat('en-US', {
   </div>
   <div>
     <h3>{entry.data.title}</h3>
-    <p>{entry.data.summary}</p>
+    <div class="news-summary" set:html={summary.code} />
     <details>
       <summary>Read more<span class="sr-only">: {entry.data.title}</span></summary>
       <div class="news-body"><Content /></div>
@@ -37,7 +40,7 @@ const dateLabel = new Intl.DateTimeFormat('en-US', {
   .news-body { margin-top: 20px; padding-left: 20px; border-left: 2px solid var(--border); }
   .news-body :global(p + p), .news-body :global(ul) { margin-top: 16px; }
   .news-body :global(h4) { margin: 24px 0 12px; font-size: 17px; }
-  .news-body :global(a) { color: var(--link); text-underline-offset: 3px; overflow-wrap: anywhere; }
+  .news-summary :global(a), .news-body :global(a) { color: var(--link); text-underline-offset: 3px; overflow-wrap: anywhere; }
   .news-body :global(li) { margin: 8px 0; line-height: 1.6; }
   .sr-only { position: absolute; width: 1px; height: 1px; overflow: hidden; clip-path: inset(50%); white-space: nowrap; }
   @media (max-width: 600px) {

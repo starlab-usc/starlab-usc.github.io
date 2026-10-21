@@ -44,7 +44,8 @@ validated at build time; the Markdown files replace the former JSON records.
 
 Add each announcement as `assets/news/<event-folder>/index.md` with `title`,
 `date` (quoted `YYYY-MM-DD`), and `summary` frontmatter. An optional `type`, such
-as `Invited talk`, appears below the date. The Markdown body appears
+as `Invited talk`, appears below the date. The summary supports Markdown links,
+such as `[Leo Toso](https://leotoso.github.io/)`. The Markdown body appears
 under **Read more**; the title is rendered from frontmatter. Keep any associated
 media in the event folder and use relative Markdown links. The homepage shows
 the eight latest entries, with older entries grouped by year under **Older news**.

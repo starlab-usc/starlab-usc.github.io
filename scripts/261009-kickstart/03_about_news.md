@@ -59,7 +59,7 @@ Place the **We study …** line directly below the About headline and above the 
 5. World Models
 6. Robot Learning
 
-Use a subtle cursor and pause for **2–3 seconds** on each completed phrase before erasing and typing the next. Repeat after Robot Learning. Reserve enough space for the longest phrase, including wrapping on mobile, so the introduction does not shift during the animation. Keep the shared StarLab header static; this animation belongs only to the homepage About section.
+Use a subtle cursor that blinks **twice over 2.2 seconds** on each completed phrase, then erase at **20 milliseconds per character** before typing the next. Repeat after Robot Learning. Reserve enough space for the longest phrase, including wrapping on mobile, so the introduction does not shift during the animation. Keep the shared StarLab header static; this animation belongs only to the homepage About section.
 
 For reduced-motion preferences or when JavaScript is unavailable, show the full keyword list as static text without a blinking cursor. Screen readers should receive that stable list, with the animated text and cursor hidden from assistive technology; do not announce individual typing updates.
 
