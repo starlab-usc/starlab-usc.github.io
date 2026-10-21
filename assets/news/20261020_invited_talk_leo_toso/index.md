@@ -1,6 +1,7 @@
 ---
 title: "Leo Toso: Control-Aware Visual Representation Learning for World Models"
 date: "2026-10-20"
+type: Invited talk
 summary: "Leo Toso (Columbia University) visited StarLab and presented Control-Aware Visual Representation Learning for World Models, exploring which information visual representations must preserve for planning and feedback control. Hosted by Stephen Tu."
 ---
 

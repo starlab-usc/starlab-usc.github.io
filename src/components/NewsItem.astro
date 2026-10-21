@@ -11,7 +11,10 @@ const dateLabel = new Intl.DateTimeFormat('en-US', {
 ---
 
 <article class="news-item">
-  <time datetime={entry.data.date}>{dateLabel}</time>
+  <div class="news-meta">
+    <time datetime={entry.data.date}>{dateLabel}</time>
+    {entry.data.type && <span class="news-type">{entry.data.type}</span>}
+  </div>
   <div>
     <h3>{entry.data.title}</h3>
     <p>{entry.data.summary}</p>
@@ -25,7 +28,9 @@ const dateLabel = new Intl.DateTimeFormat('en-US', {
 <style>
   .news-item { display: grid; grid-template-columns: 110px minmax(0, 1fr); gap: 24px; padding: 24px 0; }
   .news-item + .news-item { border-top: 1px solid var(--border); }
-  time { padding-top: 3px; color: var(--muted); font-size: 14px; }
+  .news-meta { padding-top: 3px; color: var(--muted); font-size: 14px; }
+  time { display: block; }
+  .news-type { display: block; margin-top: 6px; font-size: 12px; line-height: 1.4; }
   h3 { margin: 0 0 10px; font-size: 20px; font-weight: 550; line-height: 1.4; letter-spacing: -.015em; }
   summary { width: fit-content; margin-top: 14px; color: var(--link); cursor: pointer; }
   summary:focus-visible { outline: 2px solid currentColor; outline-offset: 5px; }

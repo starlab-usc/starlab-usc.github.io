@@ -1,6 +1,6 @@
 ---
 headline: Theoretical foundations for learning and autonomous decision-making.
-description: StarLab at USC studies statistical learning, generative modeling, control, and robot learning, connecting mathematical foundations with autonomous decision-making
+description: StarLab at USC studies statistical learning, generative modeling, control, and robot learning, connecting mathematical foundations with autonomous decision-making.
 keyword_prefix: We study
 keywords:
   - Statistics & Learning Theory
