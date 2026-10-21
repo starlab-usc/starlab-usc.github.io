@@ -1,9 +1,41 @@
 ---
 import SiteLayout from '../layouts/SiteLayout.astro';
-import people from '../../assets/people_info.json';
+import PeopleContent, { frontmatter } from './_people.md';
+import { z } from 'astro/zod';
 import placeholder from '../../assets/profile-placeholder.png?url';
 import scholarIcon from '../../assets/google-scholar.svg?url';
 import githubIcon from '../../assets/github.svg?url';
+
+const textLink = z.object({ text: z.string().min(1), url: z.url() });
+const people = z.object({
+  title: z.string().min(1),
+  sections: z.object({
+    current: z.string().min(1),
+    affiliated: z.string().min(1),
+    'masters-undergraduate': z.string().min(1),
+    graduated: z.string().min(1),
+  }),
+  collaboration_topics_label: z.string().min(1),
+  members: z.array(z.looseObject({
+    name: z.string().min(1),
+    publication_aliases: z.array(z.string().min(1)).optional(),
+    native_name: z.string().nullable(),
+    research_interests: z.array(z.string()),
+    google_scholar: z.url().nullable(),
+    website: z.url().nullable(),
+    github: z.url().nullable(),
+    additional_info: z.array(z.object({
+      text: z.string().min(1),
+      link_text: z.string().nullable().optional(),
+      url: z.url().nullable().optional(),
+      links: z.array(textLink).optional(),
+    })),
+    profile_photo: z.string().nullable(),
+    role: z.string().min(1),
+    role_link: textLink.optional(),
+    group: z.string().optional(),
+  })),
+}).parse(frontmatter);
 
 const photos = import.meta.glob<string>('../../assets/*.{png,jpg,jpeg,webp}', {
   eager: true,
@@ -18,7 +50,7 @@ const members = people.members.map((member, index) => {
 const sections = [
   {
     id: 'current',
-    title: 'PI and Current PhD Students',
+    title: people.sections.current,
     members: [
       ...members.filter((member) => member.name === 'Stephen Tu'),
       ...members.filter((member) => member.role.startsWith('PhD Student')),
@@ -26,23 +58,24 @@ const sections = [
   },
   {
     id: 'affiliated',
-    title: 'Affiliated Faculty',
+    title: people.sections.affiliated,
     members: members.filter((member) => member.group === 'affiliated'),
   },
   {
     id: 'masters-undergraduate',
-    title: "Master's and Undergraduate Students",
+    title: people.sections['masters-undergraduate'],
     members: [],
   },
   {
     id: 'graduated',
-    title: 'Graduated PhD',
+    title: people.sections.graduated,
     members: members.filter((member) => member.role === 'PhD Graduate'),
   },
 ];
 ---
 
-<SiteLayout title="People">
+<SiteLayout title={people.title}>
+  <div class="page-introduction"><PeopleContent /></div>
   {sections.map((section) => (
   <section class="people-section" aria-labelledby={`${section.id}-heading`}>
     <h2 id={`${section.id}-heading`}>{section.title}</h2>
@@ -120,7 +153,7 @@ const sections = [
             ) : member.role}
           </p>
           {member.research_interests.length > 0 && (
-            <p class="person-interests">{section.id === 'affiliated' && 'Collaboration topics: '}{member.research_interests.join(' · ')}</p>
+            <p class="person-interests">{section.id === 'affiliated' && `${people.collaboration_topics_label} `}{member.research_interests.join(' · ')}</p>
           )}
         </div>
       </article>
@@ -168,6 +201,10 @@ const sections = [
 </script>
 
 <style>
+  .page-introduction:empty { display: none; }
+  .page-introduction { max-width: 780px; }
+  .page-introduction :global(p + p) { margin-top: 18px; }
+  .page-introduction :global(a) { color: var(--link); text-underline-offset: 3px; }
   .people-section { margin-top: 40px; }
   .people-section > h2 {
     margin: 0;

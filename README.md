@@ -1,7 +1,52 @@
-# STARLab website
+# StarLab website
 
 Astro + TypeScript, with a React Three Fiber logo derived from
-`assets/STARLab_logo.svg`. The initial page contains only a top banner.
+`assets/STARLab_logo.svg`. The homepage contains About, News, and Prospective
+Students sections, with separate People and Publications pages.
+
+## About page content
+
+Edit `src/pages/_index.md` for the introduction. Its frontmatter owns the
+headline, page description, cycling keywords, and People/Publications links.
+Edit `src/pages/_prospective_students.md` for the Prospective Students heading
+and copy. Keep at least one non-empty keyword in the list.
+
+Page Markdown lives beside its Astro page. The `_` prefix prevents Astro from
+creating separate routes for these imported content files.
+
+`src/pages/index.astro` handles layout; `ResearchKeywords.astro` handles the
+animation. `scripts/261009-kickstart/03_about_news.md` remains the planning document.
+
+## People and Publications content
+
+Edit `src/pages/_people.md` for the page title, section headings, and member
+records. Member fields include names, roles, research interests, profile links,
+photo paths, and additional information. Keep photos in `assets/`; a null
+`profile_photo` uses the existing placeholder.
+
+Publication authors matching a member's name are bolded automatically, excluding
+members with `group: affiliated`. If a paper
+uses another spelling, add it to that member's optional `publication_aliases`
+list; the published author text stays unchanged.
+
+Edit `src/pages/_publications.md` for the page title and publication records.
+Each record's `id` must match its folder under `assets/publications/`, which
+contains the required `citation.bib` and optional `thumbnail.png`. Keep authors
+in credit order. The page groups publications by year and sorts titles within
+each year automatically.
+
+Both files use YAML frontmatter for structured records. Add ordinary Markdown
+below the closing `---` for introductory prose above the cards or publication
+list. Their adjacent `.astro` files handle layout and interactions. Metadata is
+validated at build time; the Markdown files replace the former JSON records.
+
+## News
+
+Add each announcement as `assets/news/<event-folder>/index.md` with `title`,
+`date` (quoted `YYYY-MM-DD`), and `summary` frontmatter. The Markdown body appears
+under **Read more**; the title is rendered from frontmatter. Keep any associated
+media in the event folder and use relative Markdown links. The homepage shows
+the eight latest entries, with older entries grouped by year under **Older news**.
 
 ## Local development
 

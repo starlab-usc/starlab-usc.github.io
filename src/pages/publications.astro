@@ -2,22 +2,39 @@
 import SiteLayout from '../layouts/SiteLayout.astro';
 import { Image } from 'astro:assets';
 import type { ImageMetadata } from 'astro';
+import PublicationsContent, { frontmatter } from './_publications.md';
+import { frontmatter as peopleContent } from './_people.md';
+import { z } from 'astro/zod';
 import arxivIcon from '../../assets/arxiv.svg?url';
 import pdfIcon from '../../assets/pdf.svg?url';
 
-interface Publication {
-  title: string;
-  authors: string[];
-  year: number;
-  venue: string;
-  links: { label: string; url: string }[];
-  note?: string;
-}
+const { members } = z.object({
+  members: z.array(z.object({
+    name: z.string().min(1),
+    group: z.string().optional(),
+    publication_aliases: z.array(z.string().min(1)).optional(),
+  })),
+}).parse(peopleContent);
+const peopleNames = new Set(members
+  .filter(({ group }) => group !== 'affiliated')
+  .flatMap(({ name, publication_aliases = [] }) => [name, ...publication_aliases]));
 
-const metadata = import.meta.glob<Publication>('../../assets/publications/*/index.json', {
-  eager: true,
-  import: 'default',
-});
+const page = z.object({
+  title: z.string().min(1),
+  bibtex_label: z.string().min(1),
+  publications: z.array(z.object({
+    id: z.string().regex(/^[a-z0-9_]+$/),
+    title: z.string().min(1),
+    authors: z.array(z.string().min(1)).min(1),
+    year: z.number().int(),
+    venue: z.string().min(1),
+    links: z.array(z.object({ label: z.string().min(1), url: z.url() })),
+    note: z.string().optional(),
+  })),
+}).parse(frontmatter);
+if (new Set(page.publications.map(({ id }) => id)).size !== page.publications.length) {
+  throw new Error('Publication IDs must be unique.');
+}
 const citations = import.meta.glob<string>('../../assets/publications/*/citation.bib', {
   eager: true,
   query: '?raw',
@@ -27,13 +44,12 @@ const thumbnails = import.meta.glob<ImageMetadata>('../../assets/publications/*/
   eager: true,
   import: 'default',
 });
-const publications = Object.entries(metadata).map(([path, publication]) => {
-  const directory = path.slice(0, -'index.json'.length);
+const publications = page.publications.map((publication) => {
+  const directory = `../../assets/publications/${publication.id}/`;
   const bibtex = citations[`${directory}citation.bib`];
   if (!bibtex) throw new Error(`Missing publication citation: ${directory}`);
   return {
     ...publication,
-    id: directory.split('/').filter(Boolean).at(-1)!,
     bibtex,
     thumbnail: thumbnails[`${directory}thumbnail.png`],
   };
@@ -42,7 +58,8 @@ const years = [...new Set(publications.map((publication) => publication.year))];
 const resourceIcons: Record<string, string> = { arXiv: arxivIcon, PDF: pdfIcon };
 ---
 
-<SiteLayout title="Publications">
+<SiteLayout title={page.title}>
+  <div class="page-introduction"><PublicationsContent /></div>
   {years.map((year) => (
   <section aria-labelledby={`publication-year-${year}`}>
     <details class="year-group" open>
@@ -73,7 +90,9 @@ const resourceIcons: Record<string, string> = { arXiv: arxivIcon, PDF: pdfIcon }
       )}
       <div class="publication-info">
       <h3 id={`publication-${publication.id}`}>{publication.title}</h3>
-      <p>{publication.authors.join(', ')}</p>
+      <p>{publication.authors.map((author, index) => (
+        <>{index > 0 && ', '}{peopleNames.has(author) ? <strong>{author}</strong> : author}</>
+      ))}</p>
       {publication.note && <p class="publication-note">{publication.note}</p>}
       <div class="venue-line">
         <span class="venue">{publication.venue}, {publication.year}</span>
@@ -89,7 +108,7 @@ const resourceIcons: Record<string, string> = { arXiv: arxivIcon, PDF: pdfIcon }
         ))}
         <span class="separator" aria-hidden="true"> | </span>
         <details>
-          <summary>BibTeX</summary>
+          <summary>{page.bibtex_label}</summary>
           <pre><code>{publication.bibtex}</code></pre>
         </details>
       </div>
@@ -115,6 +134,10 @@ const resourceIcons: Record<string, string> = { arXiv: arxivIcon, PDF: pdfIcon }
 </script>
 
 <style>
+  .page-introduction:empty { display: none; }
+  .page-introduction { max-width: 780px; }
+  .page-introduction :global(p + p) { margin-top: 18px; }
+  .page-introduction :global(a) { color: var(--link); text-underline-offset: 3px; }
   section { max-width: 960px; }
   h2 { margin: 0; font-size: 24px; }
   .year-toggle { margin: 32px 0 16px; }

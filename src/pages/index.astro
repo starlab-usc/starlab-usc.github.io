@@ -1,5 +1,70 @@
 ---
 import SiteLayout from '../layouts/SiteLayout.astro';
+import ResearchKeywords from '../components/ResearchKeywords.astro';
+import NewsItem from '../components/NewsItem.astro';
+import { getCollection } from 'astro:content';
+import About, { frontmatter as about } from './_index.md';
+import ProspectiveStudents, { frontmatter as prospective } from './_prospective_students.md';
+
+const aboutLinks: { label: string; href: string }[] = about.links;
+
+const news = (await getCollection('news')).sort((a, b) => b.data.date.localeCompare(a.data.date));
+const recentNews = news.slice(0, 8);
+const olderNews = news.slice(8);
+const olderYears = [...new Set(olderNews.map((entry) => entry.data.date.slice(0, 4)))];
 ---
 
-<SiteLayout />
+<SiteLayout description={about.description}>
+  <div class="about-page">
+    <section class="introduction" aria-labelledby="about-heading">
+      <h1 id="about-heading">{about.headline}</h1>
+      <ResearchKeywords keywords={about.keywords} prefix={about.keyword_prefix} />
+      <div class="about-copy">
+        <About />
+      </div>
+      <div class="section-links">
+        {aboutLinks.map(({ label, href }) => <a href={href}>{label} <span aria-hidden="true">→</span></a>)}
+      </div>
+    </section>
+
+    {news.length > 0 && (
+      <section class="page-section" aria-labelledby="news-heading">
+        <h2 id="news-heading">News</h2>
+        {recentNews.map((entry) => <NewsItem entry={entry} />)}
+        {olderNews.length > 0 && (
+          <details class="older-news">
+            <summary>Older news</summary>
+            {olderYears.map((year) => (
+              <section aria-label={`News from ${year}`}>
+                <p class="news-year">{year}</p>
+                {olderNews.filter((entry) => entry.data.date.startsWith(year)).map((entry) => <NewsItem entry={entry} />)}
+              </section>
+            ))}
+          </details>
+        )}
+      </section>
+    )}
+
+    <section class="page-section prospective" aria-labelledby="prospective-heading">
+      <h2 id="prospective-heading">{prospective.title}</h2>
+      <ProspectiveStudents />
+    </section>
+  </div>
+</SiteLayout>
+
+<style>
+  .about-page { max-width: 960px; padding: 12px 0 40px; }
+  .introduction { max-width: 850px; }
+  h1 { max-width: 850px; font-size: clamp(32px, 4.3vw, 52px); line-height: 1.13; letter-spacing: -.035em; font-weight: 550; }
+  .about-copy { max-width: 780px; }
+  .about-copy :global(p + p), .prospective :global(p + p) { margin-top: 18px; }
+  .about-page :global(a) { color: var(--link); text-underline-offset: 3px; }
+  .section-links { display: flex; flex-wrap: wrap; gap: 12px 28px; margin-top: 24px; }
+  .section-links a { font-size: 15px; font-weight: 500; }
+  .page-section { margin-top: 48px; padding-top: 28px; border-top: 1px solid var(--border); }
+  h2 { margin: 0 0 12px; font-size: clamp(24px, 3vw, 30px); font-weight: 550; letter-spacing: -.025em; }
+  .prospective :global(p) { max-width: 780px; }
+  .older-news > summary { color: var(--link); cursor: pointer; width: fit-content; padding: 12px 0; }
+  .older-news > summary:focus-visible { outline: 2px solid currentColor; outline-offset: 5px; }
+  .news-year { margin-top: 24px; font-weight: 600; color: var(--text); }
+</style>

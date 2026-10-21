@@ -6,9 +6,10 @@ import uscLogoDarkUrl from '../../assets/usc_primary_monogram_gold_white.svg?url
 
 interface Props {
   title?: string;
+  description?: string;
 }
 
-const { title } = Astro.props;
+const { title, description = 'StarLab' } = Astro.props;
 const currentPath = Astro.url.pathname.replace(/\/$/, '') || '/';
 const navigation = [
   { href: '/', label: 'About' },
@@ -22,7 +23,7 @@ const navigation = [
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
-    <meta name="description" content="StarLab" />
+    <meta name="description" content={description} />
     <link rel="icon" type="image/svg+xml" href={logoUrl} />
     <title>{title ? `${title} | StarLab` : 'StarLab'}</title>
     <script is:inline>

@@ -61,7 +61,7 @@ export default function InteractiveLogo({ children }: { children: ReactNode }) {
 
   return (
     <div className="brand">
-      <div className="logo" role="img" aria-label="STARLab logo" data-ready={active && ready}>
+      <div className="logo" role="img" aria-label="StarLab logo" data-ready={active && ready}>
         <img className="logo__fallback" src={logoUrl} alt="" width="65.616" height="80" />
         {active && (
           <div className="logo__scene" aria-hidden="true">

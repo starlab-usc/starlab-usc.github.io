@@ -1,6 +1,6 @@
 
 
-| Site | Visual style | What I’d borrow for STARLab |
+| Site | Visual style | What I’d borrow for StarLab |
 |---|---|---|
 | **[Princeton Robot Planning & Learning (PRPL)](https://prpl-group.com/)** | Warm off-white background, large serif headings, purple accents, playful mascot, lab-photo collage. | **Best overall reference.** Strong personality while still feeling academic. The short introduction, compact news list, and people section would suit a new lab well. |
 | **[Stanford Causal AI Lab](https://scail.stanford.edu/)** | Oversized typography, deep red opening section, restrained gold accents, illustrated research topics. | **Best fit for a theory-oriented lab.** Separates applications from foundations and lets visitors browse publications by year or theme. Its palette also offers a useful starting point for USC colors. |
@@ -11,11 +11,11 @@
 
 ## Preferred lab-logo direction: interactive 3D hover tilt
 
-Preference recorded on 2026-10-19: **[Interactive 3D Logo — Component for Framer](https://www.framer.com/marketplace/components/interactive-3d-logo/)** is the preferred format for STARLab's logo. Click **Show Preview** on the component page to explore it.
+Preference recorded on 2026-10-19: **[Interactive 3D Logo — Component for Framer](https://www.framer.com/marketplace/components/interactive-3d-logo/)** is the preferred format for StarLab's logo. Click **Show Preview** on the component page to explore it.
 
 The component turns an SVG into an extruded, beveled 3D logo with cursor-driven hover rotation and metallic/glass material options. The preference is for the visual and interaction design; implementation tooling remains open.
 
-### Proposed adaptation for STARLab
+### Proposed adaptation for StarLab
 
 - Give the lab logo visible depth and restrained highlights.
 - Apply a slight 3D tilt as the mouse moves over the logo, with the same tangible feel as the hanging profile badges below.
@@ -24,7 +24,7 @@ The component turns an SVG into an extruded, beveled 3D logo with cursor-driven 
 
 ## Preferred members-page direction: hanging profile badges
 
-Preference recorded on 2026-10-19: **Hanging Team** and **Hologram Lanyards** are the preferred visual references for STARLab's team/members page.
+Preference recorded on 2026-10-19: **Hanging Team** and **Hologram Lanyards** are the preferred visual references for StarLab's team/members page.
 
 | Reference | What to borrow |
 |---|---|
@@ -33,7 +33,7 @@ Preference recorded on 2026-10-19: **Hanging Team** and **Hologram Lanyards** ar
 
 These are Framer component demos, not verified examples of deployed lab/company member directories. Their use of the same Three.js/Rapier implementation as Vercel has not been verified; the preference is for the visual and interaction design, not a commitment to Framer or a particular library.
 
-### Proposed adaptation for STARLab
+### Proposed adaptation for StarLab
 
 - Keep each member's portrait, name, and role readable while the badge is at rest.
 - Add gentle swing/tilt on interaction; use restrained highlights that fit the lab's visual identity.

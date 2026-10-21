@@ -1,4 +1,4 @@
-# SEO for STARLab
+# SEO for StarLab
 
 Planning note, 2026-10-20. This assessment is based on the repository source; live indexing, search rankings, and performance have not been checked. The items below are proposed work.
 

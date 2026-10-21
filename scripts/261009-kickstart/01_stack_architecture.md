@@ -8,7 +8,7 @@ The repository currently contains design notes and assets, with no application o
 
 ## 1. Framework and packages
 
-| Layer | Recommendation | Why it fits STARLab |
+| Layer | Recommendation | Why it fits StarLab |
 |---|---|---|
 | Site framework | [`astro`](https://docs.astro.build/) | Pre-render the homepage, research, people, publications, and news as HTML. Most of the site is readable content; JavaScript can stay local to interactions. |
 | Language | TypeScript, with strict checking | Give member records, publications, and component inputs explicit types. |
