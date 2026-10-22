@@ -273,7 +273,9 @@ const navigation = [
     width: auto;
     height: 80px;
   }
-  .logo__scene { position: absolute; inset: 0; }
+  .logo__scene { position: absolute; inset: 0; pointer-events: none; }
+  /* Reserve touch dragging only on the ready badge; the rest of the page scrolls normally. */
+  .logo[data-ready="true"] { touch-action: none; user-select: none; }
   .logo[data-ready="true"] .logo__fallback { visibility: hidden; }
   @media (max-width: 540px) {
     .logo { width: 72px; height: 88px; }
