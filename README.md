@@ -1,95 +1,53 @@
 # StarLab website
 
-Astro + TypeScript, with a React Three Fiber logo derived from
-`assets/STARLab_logo.svg`. The homepage contains About, News, and Prospective
-Students sections, with separate People and Publications pages.
+## 1. Edit content
 
-## About page content
+Edit the content below to update [the lab website](https://starlab-usc.github.io/).
 
-Edit `src/pages/_index.md` for the introduction. Its frontmatter owns the
-headline, page description, cycling keywords, and People/Publications links.
-Edit `src/pages/_prospective_students.md` for the Prospective Students heading
-and copy. Keep at least one non-empty keyword in the list.
+| Page | What to change | Where to edit |
+| --- | --- | --- |
+| About | About text, headline, and research keywords | [src/pages/_index.md](src/pages/_index.md) |
+| About | News | Add or edit `assets/news/<event-folder>/index.md`; copy [this example](assets/news/20261020_invited_talk_leo_toso/index.md) with a new title, quoted `YYYY-MM-DD` date, and summary. The body appears under **Read more**. |
+| About | Prospective Students | [src/pages/_prospective_students.md](src/pages/_prospective_students.md) |
+| Publications | Publication thumbnail | Add or replace `thumbnail.png` in the paper's folder under [assets/publications/](assets/publications/). The folder name matches the paper's `id` in [_publications.md](src/pages/_publications.md). |
+| Publications | Add or edit a publication | Edit [src/pages/_publications.md](src/pages/_publications.md). For a new item, copy an existing record, choose a unique `id`, and add a matching folder in [assets/publications/](assets/publications/) with `citation.bib` and an optional `thumbnail.png`. Keep authors in credit order and citation metadata consistent. |
+| People | Member names, roles, interests, links, and photos | Edit [src/pages/_people.md](src/pages/_people.md). Store photos in [assets/](assets/) and set `profile_photo` to the file path, or `null` for a placeholder. |
 
-Page Markdown lives beside its Astro page. The `_` prefix prevents Astro from
-creating separate routes for these imported content files.
+People and publication records live in the YAML block between `---` markers.
+Keep the existing field structure and indentation when copying an item.
 
-`src/pages/index.astro` handles layout; `ResearchKeywords.astro` handles the
-animation. `scripts/261009-kickstart/03_about_news.md` remains the planning document.
+## 2. Local development
 
-## People and Publications content
+### 2.1. Set up the environment
 
-Edit `src/pages/_people.md` for the page title, section headings, and member
-records. Member fields include names, roles, research interests, profile links,
-photo paths, and additional information. Keep photos in `assets/`; a null
-`profile_photo` uses the existing placeholder.
-
-Publication authors matching a member's name are bolded automatically, excluding
-members with `group: affiliated`. If a paper
-uses another spelling, add it to that member's optional `publication_aliases`
-list; the published author text stays unchanged.
-
-Edit `src/pages/_publications.md` for the page title and publication records.
-Each record's `id` must match its folder under `assets/publications/`, which
-contains the required `citation.bib` and optional `thumbnail.png`. Keep authors
-in credit order. The page groups publications by year and sorts titles within
-each year automatically.
-
-Both files use YAML frontmatter for structured records. Add ordinary Markdown
-below the closing `---` for introductory prose above the cards or publication
-list. Their adjacent `.astro` files handle layout and interactions. Metadata is
-validated at build time; the Markdown files replace the former JSON records.
-
-## News
-
-Add each announcement as `assets/news/<event-folder>/index.md` with `title`,
-`date` (quoted `YYYY-MM-DD`), and `summary` frontmatter. An optional `type`, such
-as `Invited talk`, appears below the date. The summary supports Markdown links,
-such as `[Leo Toso](https://leotoso.github.io/)`. The Markdown body appears
-under **Read more**; the title is rendered from frontmatter. Keep any associated
-media in the event folder and use relative Markdown links. The homepage shows
-the eight latest entries, with older entries grouped by year under **Older news**.
-
-## Local development
-
-Use Node.js 24.21.0 (`nvm use` if you use nvm), then:
+Install [nvm](https://github.com/nvm-sh/nvm#installing-and-updating) if needed, then run these commands from the repository root. `nvm install` installs the Node.js version specified in [.nvmrc](.nvmrc) (24.21.0), including npm.
 
 ```sh
+nvm install
+nvm use
 npm ci
+```
+
+### 2.2. Serve locally
+
+After environment setup, start the development server:
+
+```sh
 npm run dev
 ```
 
-Open the local URL printed by Astro (normally http://localhost:4321).
-Move the pointer over the logo to tilt it; leaving the logo returns it to rest.
-The logo is a single glass block cropped to the black artwork’s outer bounds.
-An SVG-derived material mask makes the black parts opaque and the gaps clear,
-with flush faces, neutral studio reflections, and no surrounding plate or rim.
-Interior black/clear boundaries have opaque walls through the block's depth,
-so tilting reveals the black shapes' sides through the clear fill.
-The original SVG remains unchanged.
-Touch devices, reduced-motion preferences, disabled JavaScript, and WebGL
-failures retain the static SVG.
+Open the URL printed by Astro (normally http://localhost:4321). Stop the server with `Ctrl+C`.
 
-## Validation and production
+### 2.3. Check and build
+
+After environment setup, run these checks before submitting changes:
 
 ```sh
 npm run check
 npm run build
-npm run preview
 ```
 
-The production site is generated in `dist/`. No backend or environment
-variables are required.
+## 3. Publish
 
-## GitHub Pages
-
-The deployment target is https://starlab-usc.github.io/.
-In the GitHub repository's **Settings → Pages**, the publishing source must
-be **GitHub Actions**.
-GitHub Pages must be enabled before deployment. Private organization
-repositories require a GitHub plan that supports Pages for private repositories.
-
-Pushes to `main` run `.github/workflows/deploy.yml`, which checks and builds
-the site with Node.js 24.21.0, then deploys `dist/` to GitHub Pages. The workflow
-can also be run manually from the Actions tab. No deployment token or committed
-build output is needed.
+Pushes to `main` automatically publish through [GitHub Actions](.github/workflows/deploy.yml).
+The repository's **Settings → Pages → Source** must be **GitHub Actions**.
