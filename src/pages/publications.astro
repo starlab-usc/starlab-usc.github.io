@@ -83,6 +83,9 @@ const resourceIcons: Record<string, string> = { arXiv: arxivIcon, PDF: pdfIcon }
         sizes={`${132 * Math.max(1, publication.thumbnail.width / publication.thumbnail.height)}px`}
         format="webp"
       />
+      {publication.thumbnail.width > publication.thumbnail.height && (
+        <span class="thumbnail-edge-fade" aria-hidden="true"></span>
+      )}
       </div>
       </div>
       ) : (
@@ -165,32 +168,47 @@ const resourceIcons: Record<string, string> = { arXiv: arxivIcon, PDF: pdfIcon }
     width: 132px;
     max-width: 100%;
     aspect-ratio: 1;
+    border-radius: 4px;
   }
   .thumbnail-reveal {
     position: absolute;
     top: 0;
     left: 0;
     width: min(var(--thumbnail-width), 100cqi);
-    clip-path: inset(0 max(0px, calc(100% - 132px)) max(0px, calc(100% - 132px)) 0);
+    clip-path: inset(0 var(--thumbnail-crop, max(0px, calc(100% - 132px))) var(--thumbnail-crop, max(0px, calc(100% - 132px))) 0 round 4px);
     background: var(--page-bg);
     z-index: 1;
   }
   .thumbnail-reveal img { display: block; width: 100%; height: auto; }
+  .thumbnail-edge-fade {
+    position: absolute;
+    z-index: 2;
+    top: 0;
+    bottom: 0;
+    right: var(--thumbnail-crop, max(0px, calc(100% - 132px)));
+    width: 20px;
+    background: linear-gradient(90deg, transparent, var(--page-bg));
+    opacity: var(--thumbnail-edge-opacity, 1);
+    pointer-events: none;
+  }
   .publication-thumbnail--expandable:focus-visible {
     outline: 2px solid currentColor;
     outline-offset: 4px;
   }
-  .publication-thumbnail--expandable:not([data-dismissed]):focus-visible .thumbnail-reveal {
-    clip-path: inset(0);
+  .publication-thumbnail--expandable:not([data-dismissed]):focus-visible {
+    --thumbnail-crop: 0px;
+    --thumbnail-edge-opacity: 0;
   }
   @media (hover: hover) {
-    .publication-thumbnail--expandable:not([data-dismissed]):hover .thumbnail-reveal {
-      clip-path: inset(0);
+    .publication-thumbnail--expandable:not([data-dismissed]):hover {
+      --thumbnail-crop: 0px;
+      --thumbnail-edge-opacity: 0;
     }
   }
   @media (hover: none) {
-    .publication-thumbnail--expandable:not([data-dismissed]):focus .thumbnail-reveal {
-      clip-path: inset(0);
+    .publication-thumbnail--expandable:not([data-dismissed]):focus {
+      --thumbnail-crop: 0px;
+      --thumbnail-edge-opacity: 0;
     }
   }
   @media (max-width: 640px) {
@@ -227,6 +245,7 @@ const resourceIcons: Record<string, string> = { arXiv: arxivIcon, PDF: pdfIcon }
   @media (prefers-reduced-motion: no-preference) {
     summary::before { transition: transform 180ms ease; }
     .thumbnail-reveal { transition: clip-path 180ms ease; }
+    .thumbnail-edge-fade { transition: right 180ms ease, opacity 180ms ease; }
   }
   pre {
     padding: 16px;

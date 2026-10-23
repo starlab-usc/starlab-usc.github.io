@@ -33,7 +33,7 @@ Keep the implementation in the existing shared layout and content structure. An 
 - Verify `https://starlab-usc.github.io/` as a URL-prefix property in Google Search Console using an available ownership-verification method. A DNS-based property for `github.io` is not appropriate because the lab does not control that domain.
 - Submit the generated sitemap, inspect the homepage URL, and request indexing after substantive updates. Confirm that public pages return successful responses and do not contain accidental `noindex` directives or crawl blocks.
 - Obtain relevant links from the faculty's official USC profile, department directory, members' websites, and project repositories. Keep the lab name and destination URL consistent.
-- If a custom domain is adopted later, update canonicals, the sitemap, sharing URLs, and Search Console configuration, and verify redirects from the previous address.
+- If a custom domain is adopted later, follow the [USC domain checklist](04_usc_domain.md), update canonicals, the sitemap, sharing URLs, and Search Console configuration, and verify redirects from the previous address.
 
 ## 4. Research and paper discovery
 

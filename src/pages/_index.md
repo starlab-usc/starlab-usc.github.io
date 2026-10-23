@@ -12,10 +12,10 @@ keywords:
   - World Models
   - Robot Learning
 links:
-  - label: Meet the people behind the work
-    href: /people
   - label: Explore our publications
     href: /publications
+  - label: Meet the people behind the work
+    href: /people
 ---
 
 StarLab is a research group at the University of Southern California, led by Assistant Professor [Stephen Tu](https://stephentu.github.io/), who holds appointments in [Electrical and Computer Engineering](https://minghsiehece.usc.edu/) and [Computer Science](https://www.cs.usc.edu/) (courtesy).

@@ -102,7 +102,13 @@ members:
     email: null
     github: null
     github_username: null
-    additional_info: []
+    additional_info:
+      - text: Co-advised by Lars Lindemann at ETH Zurich
+        links:
+          - text: Lars Lindemann
+            url: https://ee.ethz.ch/the-department/faculty/professors/person-detail.MzY4OTYz.TGlzdC80MTEsMTA1ODA0MjU5.html
+          - text: ETH Zurich
+            url: https://ethz.ch/en.html
     profile_photo: assets/profile_photo_grant_pauker.png
     role: PhD Student, 2nd year
   - name: Sungje Park
