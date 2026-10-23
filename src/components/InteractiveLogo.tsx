@@ -48,7 +48,7 @@ export default function InteractiveLogo({ children }: { children: ReactNode }) {
     const cancelIntro = () => clearTimeout(introTimer);
     const tilt = (x: number, y: number) => {
       setTarget([
-        Math.max(-1, Math.min(1, y)) * 0.55,
+        Math.max(-1, Math.min(1, y)) * 0.70,
         Math.max(-1, Math.min(1, x)) * 0.70,
       ]);
     };
