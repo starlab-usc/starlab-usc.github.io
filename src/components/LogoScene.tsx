@@ -184,6 +184,9 @@ export default function LogoScene(props: LogoProps) {
   return (
     <Canvas
       orthographic
+      // Measure the layout box before the mobile CSS scale, keeping the
+      // canvas and orthographic camera centered within the logo badge.
+      resize={{ offsetSize: true }}
       camera={{ position: [0, 0, 200], zoom: 1, near: 0.1, far: 500 }}
       dpr={[1, 2]}
       frameloop="demand"
