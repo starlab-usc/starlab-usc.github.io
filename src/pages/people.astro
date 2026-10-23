@@ -20,6 +20,7 @@ const people = z.object({
     name: z.string().min(1),
     publication_aliases: z.array(z.string().min(1)).optional(),
     native_name: z.string().nullable(),
+    native_name_lang: z.string().min(1).optional(),
     research_interests: z.array(z.string()),
     google_scholar: z.url().nullable(),
     website: z.url().nullable(),
@@ -133,7 +134,7 @@ const sections = [
               <span tabindex={member.native_name ? 0 : undefined} aria-describedby={member.native_name ? `native-name-${index}` : undefined}>{member.name}</span>
             )}
             {member.native_name && (
-              <span class="native-name" id={`native-name-${index}`} role="tooltip" lang="zh">{member.native_name}</span>
+              <span class="native-name" id={`native-name-${index}`} role="tooltip" lang={member.native_name_lang ?? 'zh'}>{member.native_name}</span>
             )}
           </h3>
           {member.google_scholar && (

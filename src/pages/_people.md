@@ -112,14 +112,19 @@ members:
     profile_photo: assets/profile_photo_grant_pauker.png
     role: PhD Student, 2nd year
   - name: Sungje Park
-    native_name: null
-    research_interests: []
-    google_scholar: null
+    native_name: 박성제
+    native_name_lang: ko
+    research_interests:
+      - PDE learning
+      - safe control
+      - dynamical systems
+    google_scholar: https://scholar.google.com/citations?user=AEllvtYAAAAJ&hl=en
     website: null
     email: null
-    github: null
-    github_username: null
-    additional_info: []
+    github: https://github.com/sungje-park
+    github_username: sungje-park
+    additional_info:
+      - text: NSF GRFP Fellow
     profile_photo: assets/profile_photo_sungje_park.png
     role: PhD Student, 2nd year
   - name: Kamiar Asgari
