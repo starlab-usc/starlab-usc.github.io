@@ -125,6 +125,8 @@ members:
     github_username: sungje-park
     additional_info:
       - text: NSF GRFP Fellow
+        link_text: NSF GRFP
+        url: https://www.nsf.gov/funding/initiatives/grfp
     profile_photo: assets/profile_photo_sungje_park.png
     role: PhD Student, 2nd year
   - name: Kamiar Asgari
