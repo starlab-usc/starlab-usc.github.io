@@ -48,8 +48,8 @@ export default function InteractiveLogo({ children }: { children: ReactNode }) {
     const cancelIntro = () => clearTimeout(introTimer);
     const tilt = (x: number, y: number) => {
       setTarget([
-        Math.max(-1, Math.min(1, y)) * 0.35,
-        Math.max(-1, Math.min(1, x)) * 0.44,
+        Math.max(-1, Math.min(1, y)) * 0.55,
+        Math.max(-1, Math.min(1, x)) * 0.70,
       ]);
     };
     const release = () => {
@@ -71,7 +71,7 @@ export default function InteractiveLogo({ children }: { children: ReactNode }) {
       introTimer = setTimeout(() => setTarget([0, 0]), 650);
     }
 
-    // Track the whole viewport while keeping the badge's existing tilt range.
+    // Track the whole viewport using the same tilt limits as touch dragging.
     const move = (event: PointerEvent) => {
       if (event.pointerType !== 'mouse' || !mouseAvailable.matches || drag) return;
       cancelIntro();

@@ -28,7 +28,7 @@ if (!Array.isArray(keywords) || keywords.length === 0 || keywords.some((keyword)
     const current = root.querySelector<HTMLElement>('.keyword-current')!;
     const keywords = Array.from(root.querySelectorAll('.keyword-measure'), (el) => el.textContent!);
     const reducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)');
-    const holdDuration = 2200; // Two 1.1-second cursor blinks.
+    const holdDuration = 3300; // Three 1.1-second cursor blinks.
     let index = 0;
     let length = keywords[0].length;
     let deleting = true;
@@ -38,7 +38,7 @@ if (!Array.isArray(keywords) || keywords.length === 0 || keywords.some((keyword)
       current.removeAttribute('data-holding');
       length += deleting ? -1 : 1;
       current.textContent = keywords[index].slice(0, length);
-      let delay = deleting ? 20 : 85;
+      let delay = deleting ? 20 : 40;
       if (length === 0) {
         index = (index + 1) % keywords.length;
         deleting = false;
@@ -79,7 +79,7 @@ if (!Array.isArray(keywords) || keywords.length === 0 || keywords.some((keyword)
   .keyword-stage > span { grid-area: 1 / 1; overflow-wrap: anywhere; }
   .keyword-measure { visibility: hidden; }
   .keyword-stage > span::after { content: '▎'; font-weight: 400; }
-  .keyword-current[data-holding]::after { animation: cursor 1.1s step-end 2; }
+  .keyword-current[data-holding]::after { animation: cursor 1.1s step-end 3; }
   .is-paused .keyword-current::after { animation: none; }
   .is-animated .keyword-summary {
     position: absolute;
