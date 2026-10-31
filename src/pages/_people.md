@@ -119,7 +119,7 @@ members:
       - safe control
       - dynamical systems
     google_scholar: https://scholar.google.com/citations?user=AEllvtYAAAAJ&hl=en
-    website: null
+    website: http://sungjepark.com/
     email: null
     github: https://github.com/sungje-park
     github_username: sungje-park
